@@ -1,0 +1,73 @@
+import { ArrowUpRight, Sparkles } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { business } from "@/lib/data/business";
+import { dashboardStats } from "@/lib/data/dashboard";
+import { formatNumber, formatPercent } from "@/lib/formatters";
+
+export function ProgramHealthHero() {
+  const memberProgress = Math.round((business.activeMembers / business.memberGoal) * 100);
+
+  return (
+    <section
+      aria-label="Loyalty program health summary"
+      className="hero-card reveal reveal-delay-1 relative mt-7 overflow-hidden rounded-2xl px-6 py-7 text-white sm:px-8 lg:px-9 lg:py-8"
+    >
+      <div className="relative z-10 grid gap-8 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-center">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge className="inline-flex h-auto gap-1.5 rounded-full border border-amber-200/30 bg-amber-300/15 px-3 py-1.5 text-[11px] font-bold text-amber-100">
+              <Sparkles aria-hidden="true" className="h-3.5 w-3.5 text-amber-200" strokeWidth={1.8} />
+              Rewards unlocked
+            </Badge>
+            <Badge className="h-auto rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-violet-100">
+              This month
+            </Badge>
+          </div>
+          <h2 className="mt-5 max-w-lg text-[25px] font-bold leading-[1.12] tracking-[-.045em] sm:text-[30px]">
+            Your loyalty program is on a roll.
+          </h2>
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-violet-100/85">
+            Members are visiting more often and redeeming rewards faster than last month. Keep the momentum going.
+          </p>
+          <div className="mt-7 max-w-xl">
+            <div className="flex items-center justify-between gap-4 text-[11px] font-semibold text-violet-100/80">
+              <span>Member goal progress</span>
+              <span className="numeric text-white">
+                {formatNumber(business.activeMembers)} <span className="font-normal text-violet-100/70">/ {formatNumber(business.memberGoal)} members</span>
+              </span>
+            </div>
+            <Progress
+              value={memberProgress}
+              aria-label="Member goal progress"
+              className="mt-2 flex-1 gap-0 [&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:bg-white/20 [&_[data-slot=progress-indicator]]:bg-gold"
+            />
+            <div className="mt-2 flex items-center justify-between gap-4 text-[10px] font-semibold text-violet-100/65">
+              <span>Keep inviting your regulars</span>
+              <span className="numeric">{memberProgress}%</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="soft-glass rounded-2xl border-white/20 bg-white/10 p-5 shadow-none backdrop-blur-xl">
+          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[.16em] text-violet-100/70">
+            <span>Active members</span>
+            <ArrowUpRight aria-hidden="true" className="h-4 w-4 text-violet-100" strokeWidth={1.8} />
+          </div>
+          <div className="mt-3 flex items-end gap-3">
+            <p className="numeric text-[42px] font-bold leading-none tracking-[-.06em]">{formatNumber(dashboardStats.totalCustomers)}</p>
+            <Badge className="mb-1 h-auto rounded-full border-0 bg-emerald-300/15 px-2 py-1 text-[10px] font-bold text-emerald-100">
+              +{formatPercent(dashboardStats.memberGrowth)}
+            </Badge>
+          </div>
+          <div className="mt-5 h-px bg-white/15" />
+          <div className="mt-3 flex items-center justify-between text-[11px] font-semibold">
+            <span className="text-violet-100/65">vs. last month</span>
+            <span className="numeric text-white">+146 members</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

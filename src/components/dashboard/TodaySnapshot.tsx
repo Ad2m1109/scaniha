@@ -1,0 +1,79 @@
+import type { LucideIcon } from "lucide-react";
+import { ArrowUpRight, Repeat2, TicketCheck, UserPlus } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+
+interface SnapshotItem {
+  label: string;
+  description: string;
+  value: string;
+  icon: LucideIcon;
+  iconClassName: string;
+}
+
+const snapshotItems: SnapshotItem[] = [
+  {
+    label: "New members",
+    description: "Joined the program today",
+    value: "24",
+    icon: UserPlus,
+    iconClassName: "bg-purple-soft text-purple",
+  },
+  {
+    label: "Rewards claimed",
+    description: "Mostly free latte redemptions",
+    value: "38",
+    icon: TicketCheck,
+    iconClassName: "bg-gold-soft text-amber-700",
+  },
+  {
+    label: "Returning guests",
+    description: "Came back within 7 days",
+    value: "71%",
+    icon: Repeat2,
+    iconClassName: "bg-emerald-100 text-emerald-700",
+  },
+];
+
+export function TodaySnapshot() {
+  return (
+    <Card className="glass-card min-w-0 border-0 p-0 ring-0">
+      <CardHeader className="flex flex-row items-start justify-between gap-3 p-5 pb-0 sm:p-6 sm:pb-0">
+        <div>
+          <CardTitle className="card-title">Today&apos;s snapshot</CardTitle>
+          <p className="mt-1 text-xs text-muted">A quick pulse from the floor</p>
+        </div>
+        <Badge className="h-auto rounded-full border-0 bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">Live</Badge>
+      </CardHeader>
+      <CardContent className="p-5 pt-4 sm:p-6 sm:pt-4">
+        <div>
+          {snapshotItems.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <div key={item.label}>
+                {index > 0 ? <Separator className="bg-line" /> : null}
+                <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                  <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ${item.iconClassName}`}>
+                    <Icon aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-xs font-bold text-ink">{item.label}</p>
+                    <p className="mt-0.5 truncate text-[11px] text-muted">{item.description}</p>
+                  </div>
+                  <span className="numeric text-base font-bold text-ink">{item.value}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <Button variant="outline" type="button" className="mt-5 flex w-full items-center justify-between rounded-xl border-line bg-surface-soft px-3.5 text-xs font-bold text-purple-dark hover:border-purple-300 hover:bg-purple-wash dark:text-purple-300">
+          View activity
+          <ArrowUpRight aria-hidden="true" className="h-4 w-4 text-purple" strokeWidth={1.8} />
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
