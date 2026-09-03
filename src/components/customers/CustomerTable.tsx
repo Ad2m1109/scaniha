@@ -1,6 +1,7 @@
 "use client";
 
 import { Mail, Phone, SearchX } from "lucide-react";
+import Link from "next/link";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +22,7 @@ interface CustomerTableProps {
 }
 
 const tierStyles: Record<CustomerTier, string> = {
-  Gold: "bg-gold-soft text-amber-700",
+  Gold: "bg-gold-soft text-accent-foreground",
   Silver: "bg-purple-soft text-purple-dark",
   Bronze: "bg-orange-100 text-orange-700",
 };
@@ -53,7 +54,7 @@ export function CustomerTable({ customers }: CustomerTableProps) {
                       <AvatarFallback className="bg-transparent text-[10px] font-bold text-purple">{initials(customer.name)}</AvatarFallback>
                     </Avatar>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-bold text-ink">{customer.name}</p>
+                      <Link href={`/dashboard/customers/${customer.id}`} className="truncate text-sm font-bold text-ink hover:text-purple">{customer.name}</Link>
                       <p className="mt-0.5 truncate text-[11px] text-muted">Joined {customer.joinedAt}</p>
                     </div>
                   </div>
@@ -66,7 +67,7 @@ export function CustomerTable({ customers }: CustomerTableProps) {
                 </TableCell>
                 <TableCell className="numeric text-sm font-semibold text-ink">{customer.visits}</TableCell>
                 <TableCell className="numeric text-sm font-semibold text-ink">{formatNumber(customer.points)}</TableCell>
-                <TableCell className="pr-5"><Badge className={`border-0 px-2.5 py-1 text-[10px] font-bold ${tierStyles[customer.tier]}`}>{customer.tier}</Badge></TableCell>
+                <TableCell className="pr-5"><div className="flex items-center justify-between gap-2"><Badge className={`border-0 px-2.5 py-1 text-[10px] font-bold ${tierStyles[customer.tier]}`}>{customer.tier}</Badge><Link href={`/dashboard/customers/${customer.id}`} className="text-[11px] font-bold text-purple">View</Link></div></TableCell>
               </TableRow>
             ))}
             {customers.length === 0 ? (

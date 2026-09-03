@@ -14,6 +14,13 @@ export interface Business {
   activeMembers: number;
   memberGoal: number;
   createdAt: string;
+  phone?: string;
+  address?: string;
+  description?: string;
+  logo?: string;
+  facebook?: string;
+  instagram?: string;
+  whatsapp?: string;
 }
 
 export interface Category {
@@ -78,6 +85,12 @@ export interface RedemptionRecord {
   createdAt: string;
 }
 
+export interface MenuViewRecord {
+  id: string;
+  source: "menu" | "qr";
+  createdAt: string;
+}
+
 export type MenuTemplateId = "noir" | "lavender" | "sunset" | "botanical" | "mono";
 
 export interface MenuSettings {
@@ -100,6 +113,19 @@ export interface BusinessProfile extends Business {
   facebook: string;
   instagram: string;
   whatsapp: string;
+}
+
+export interface AppState {
+  business: BusinessProfile;
+  categories: Category[];
+  products: Product[];
+  customers: Customer[];
+  rewards: Reward[];
+  loyalty: LoyaltyConfig;
+  menuSettings: MenuSettings;
+  visits: VisitRecord[];
+  redemptions: RedemptionRecord[];
+  menuViews: MenuViewRecord[];
 }
 
 export interface Activity {

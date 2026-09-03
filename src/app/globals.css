@@ -147,116 +147,158 @@
 
 @layer components {
   .dashboard-app {
+    --page-bg: #F6F7F9;
+    --surface-solid: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-soft: #F1F3F5;
+    --purple: #2563EB;
+    --purple-dark: #1D4ED8;
+    --purple-soft: #DBEAFE;
+    --purple-wash: #2563EB0D;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+    --ink: #1F2937;
+    --muted: #667085;
+    --faint: #98A2B3;
+    --line: #E4E7EC;
+    --line-strong: #D0D5DD;
+    --success: #16A34A;
+    --success-soft: #DCFCE7;
+    --danger: #DC2626;
+    --background: #F6F7F9;
+    --foreground: #1F2937;
+    --card: #FFFFFF;
+    --card-foreground: #1F2937;
+    --popover: #FFFFFF;
+    --popover-foreground: #1F2937;
+    --primary: #2563EB;
+    --primary-foreground: #FFFFFF;
+    --secondary: #F1F3F5;
+    --secondary-foreground: #344054;
+    --muted-foreground: #667085;
+    --accent: #FEF3C7;
+    --accent-foreground: #92400E;
+    --border: #E4E7EC;
+    --input: #D0D5DD;
+    --ring: #2563EB;
+    --chart-1: #2563EB;
+    --chart-2: #F59E0B;
+    --chart-3: #16A34A;
+    --chart-4: #06B6D4;
+    --chart-5: #8B5CF6;
+    --sidebar: #FFFFFF;
+    --sidebar-foreground: #1F2937;
+    --sidebar-primary: #2563EB;
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-accent: #DBEAFE;
+    --sidebar-accent-foreground: #1D4ED8;
+    --sidebar-border: #E4E7EC;
+    --sidebar-ring: #2563EB;
+    --shadow: 0 1px 2px #1018280A, 0 4px 12px #1018280A;
+    --shadow-soft: 0 1px 3px #1018280F;
     min-height: 100vh;
     background:
-      radial-gradient(circle at 78% -12%, #C4B5FD52, transparent 27rem),
-      radial-gradient(circle at 14% 84%, #F59E0B14, transparent 24rem),
       var(--page-bg);
     color: var(--ink);
     transition: background-color 240ms ease, color 240ms ease;
   }
 
   .dashboard-app.dark {
-    --page-bg: #120D21;
-    --surface-solid: #211738;
-    --surface: #241A3DB8;
-    --surface-soft: #34245499;
-    --purple-soft: #7C3AED33;
-    --purple-wash: #A78BFA21;
-    --gold-soft: #F59E0B26;
-    --ink: #F7F3FF;
-    --muted: #B8AEC9;
-    --faint: #877A9F;
-    --line: #DACCFF21;
-    --line-strong: #DACCFF3D;
-    --success-soft: #0F9F8224;
-    --background: #120D21;
-    --foreground: #F7F3FF;
-    --card: #211738;
-    --card-foreground: #F7F3FF;
-    --popover: #211738;
-    --popover-foreground: #F7F3FF;
-    --secondary: #342454;
-    --secondary-foreground: #DDD6FE;
-    --muted-foreground: #B8AEC9;
-    --accent: #3B2B0D;
-    --accent-foreground: #FCD34D;
-    --border: #DACCFF21;
-    --input: #DACCFF2B;
-    --ring: #A78BFA;
-    --sidebar: #160F25B8;
-    --sidebar-foreground: #F7F3FF;
-    --sidebar-accent: #7C3AED33;
-    --sidebar-accent-foreground: #DDD6FE;
-    --sidebar-border: #DACCFF21;
-    background:
-      radial-gradient(circle at 75% -12%, #5B21B65C, transparent 28rem),
-      radial-gradient(circle at 14% 84%, #F59E0B12, transparent 24rem),
-      var(--page-bg);
+    --page-bg: #EEF2F6;
+    --surface-solid: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-soft: #E9EEF4;
+    --purple: #2563EB;
+    --purple-dark: #1D4ED8;
+    --purple-soft: #DBEAFE;
+    --purple-wash: #2563EB0D;
+    --ink: #172033;
+    --muted: #5D6B7E;
+    --faint: #8C98A8;
+    --line: #D8E0E9;
+    --line-strong: #C5CFDA;
+    --background: #EEF2F6;
+    --foreground: #172033;
+    --card: #FFFFFF;
+    --card-foreground: #172033;
+    --popover: #FFFFFF;
+    --popover-foreground: #172033;
+    --secondary: #E9EEF4;
+    --secondary-foreground: #344054;
+    --muted-foreground: #5D6B7E;
+    --border: #D8E0E9;
+    --input: #C5CFDA;
+    --sidebar: #F8FAFC;
+    --sidebar-foreground: #172033;
+    --sidebar-border: #D8E0E9;
+    background: var(--page-bg);
   }
 
   .dashboard-app .glass-card {
     background: var(--surface);
     border: 1px solid var(--line);
     box-shadow: var(--shadow);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
   }
 
   .dashboard-app .soft-glass {
     background: var(--surface-soft);
     border: 1px solid var(--line);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
   }
 
   .dashboard-app .hero-card {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(118deg, #5B21B6 0%, #7C3AED 43%, #4F46E5 100%);
-    box-shadow: 0 14px 28px #5B21B612;
+    background: #EAF2FF;
+    border: 1px solid #C6DCFF;
+    box-shadow: var(--shadow);
   }
 
   .dashboard-app .hero-card::before {
     position: absolute;
-    top: -218px;
-    right: -120px;
-    width: 420px;
-    height: 420px;
-    border: 1px solid #FFFFFF26;
-    border-radius: 50%;
-    box-shadow: 0 0 0 42px #FFFFFF09, 0 0 0 86px #FFFFFF07;
+    inset: 0;
+    width: auto;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    background: repeating-linear-gradient(115deg, transparent 0 28px, #2563EB08 28px 29px);
+    box-shadow: none;
     content: "";
   }
 
   .dashboard-app .hero-card::after {
     position: absolute;
-    right: 38%;
-    bottom: -120px;
-    width: 180px;
-    height: 180px;
-    border-radius: 42px;
-    background: #FFFFFF0F;
+    right: 34px;
+    bottom: -88px;
+    width: 190px;
+    height: 190px;
+    border: 42px solid #2563EB0A;
+    border-radius: 50%;
+    background: transparent;
     content: "";
     transform: rotate(28deg);
+  }
+
+  .dashboard-app .hero-card .soft-glass {
+    background: #FFFFFF;
   }
 
   .dashboard-app .loyalty-card {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, #4C1D95 0%, #7C3AED 50%, #4338CA 100%);
-    box-shadow: 0 12px 24px #4C1D9524;
+    background: #EEF8F1;
+    border: 1px solid #CEE7D5;
+    box-shadow: var(--shadow-soft);
   }
 
   .dashboard-app .loyalty-card::after {
     position: absolute;
-    top: -60px;
-    right: -44px;
-    width: 210px;
-    height: 210px;
-    border: 1px solid #FFFFFF2B;
-    border-radius: 50%;
-    box-shadow: 0 0 0 20px #FFFFFF0A, 0 0 0 54px #FFFFFF08;
+    inset: 0;
+    width: auto;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    background: repeating-linear-gradient(120deg, transparent 0 34px, #16A34A08 34px 35px);
+    box-shadow: none;
     content: "";
   }
 
@@ -265,9 +307,9 @@
   }
 
   .dashboard-app .hover-lift:hover {
-    border-color: #7C3AED47;
-    box-shadow: 0 20px 42px #4B318124, 0 3px 10px #4B31810F;
-    transform: translateY(-3px);
+    border-color: var(--line-strong);
+    box-shadow: 0 6px 16px #1018280D;
+    transform: translateY(-2px);
   }
 
   .dashboard-app .nav-link {
@@ -284,11 +326,11 @@
   .dashboard-app .nav-link[data-active="true"] {
     color: var(--purple);
     background: var(--purple-soft);
-    box-shadow: inset 3px 0 0 var(--purple);
+    box-shadow: inset 2px 0 0 var(--purple);
   }
 
   .dashboard-app.dark .nav-link[data-active="true"] {
-    color: #C4B5FD;
+    color: var(--purple-dark);
   }
 
   .dashboard-app .icon-button {
@@ -324,11 +366,28 @@
   .dashboard-app .range-button[data-active="true"] {
     color: var(--purple);
     background: var(--purple-soft);
-    box-shadow: 0 3px 10px #7C3AED1A;
+    box-shadow: inset 0 -1px 0 var(--purple);
   }
 
   .dashboard-app.dark .range-button[data-active="true"] {
-    color: #DDD6FE;
+    color: var(--purple-dark);
+  }
+
+  .dashboard-app :is(h1, h2, .page-title, .card-title) {
+    font-family: Georgia, "Times New Roman", serif;
+  }
+
+  .dashboard-app :is(.rounded-xl, .rounded-2xl) {
+    border-radius: 0.5rem;
+  }
+
+  .dashboard-app .rounded-\[14px\] {
+    border-radius: 0.5rem;
+  }
+
+  .dashboard-app .shadow-lg,
+  .dashboard-app .shadow-md {
+    box-shadow: var(--shadow-soft);
   }
 
   .dashboard-app .mobile-menu-panel {
@@ -355,7 +414,8 @@
   }
 
   .dashboard-app .stamp.is-empty {
-    background: #FFFFFF1A;
+    border-color: var(--line-strong);
+    background: #FFFFFF;
   }
 
   .dashboard-app .reveal {
@@ -424,6 +484,26 @@
       transition-duration: 1ms !important;
     }
   }
+
+  @media print {
+    body:has(.qr-code-generator) * {
+      visibility: hidden;
+    }
+
+    .qr-code-generator,
+    .qr-code-generator * {
+      visibility: visible;
+    }
+
+    .qr-code-generator {
+      position: absolute;
+      inset: 2rem auto auto 2rem;
+    }
+
+    .qr-code-generator button {
+      display: none;
+    }
+  }
 }
 
 @utility eyebrow {
@@ -438,16 +518,16 @@
 @utility page-title {
   color: var(--ink);
   font-size: clamp(1.75rem, 2.6vw, 2.25rem);
-  font-weight: 700;
-  letter-spacing: -0.05em;
+  font-weight: 600;
+  letter-spacing: -0.035em;
   line-height: 1.1;
 }
 
 @utility card-title {
   color: var(--ink);
   font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
+  font-weight: 600;
+  letter-spacing: -0.015em;
   line-height: 1.3;
 }
 

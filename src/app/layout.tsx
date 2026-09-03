@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { AppDataProvider } from "@/context/AppDataContext";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -24,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+      <body><AppDataProvider>{children}</AppDataProvider></body>
     </html>
   );
 }

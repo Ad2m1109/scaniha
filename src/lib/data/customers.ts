@@ -11,6 +11,7 @@ export const customers: Customer[] = [
     tier: "Gold",
     lastVisit: "Today, 9:14 AM",
     joinedAt: "2024-01-18",
+    qrCode: "PK-MAYA-KIM",
   },
   {
     id: "ahmed-benali",
@@ -22,6 +23,7 @@ export const customers: Customer[] = [
     tier: "Gold",
     lastVisit: "Today, 8:42 AM",
     joinedAt: "2024-03-04",
+    qrCode: "PK-AHMED-BENALI",
   },
   {
     id: "sarah-khelil",
@@ -33,6 +35,7 @@ export const customers: Customer[] = [
     tier: "Silver",
     lastVisit: "Yesterday, 4:32 PM",
     joinedAt: "2024-04-11",
+    qrCode: "PK-SARAH-KHELIL",
   },
   {
     id: "karim-boudia",
@@ -44,6 +47,7 @@ export const customers: Customer[] = [
     tier: "Silver",
     lastVisit: "Yesterday, 1:06 PM",
     joinedAt: "2024-05-19",
+    qrCode: "PK-KARIM-BOUDIA",
   },
   {
     id: "leila-mansouri",
@@ -55,6 +59,7 @@ export const customers: Customer[] = [
     tier: "Bronze",
     lastVisit: "2 days ago",
     joinedAt: "2024-06-22",
+    qrCode: "PK-LEILA-MANSOURI",
   },
   {
     id: "jon-park",
@@ -66,6 +71,7 @@ export const customers: Customer[] = [
     tier: "Bronze",
     lastVisit: "Jun 01, 11:46 AM",
     joinedAt: "2024-07-05",
+    qrCode: "PK-JON-PARK",
   },
 ];
 

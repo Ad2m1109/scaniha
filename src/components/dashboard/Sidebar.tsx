@@ -11,16 +11,18 @@ import {
   MoreHorizontal,
   QrCode,
   Settings2,
-  Sparkles,
   Users,
   CircleHelp,
   ChevronsUpDown,
+  HeartHandshake,
+  ScanLine,
+  WandSparkles,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { business } from "@/lib/data/business";
+import { useAppData } from "@/context/AppDataContext";
 import { cn } from "@/lib/utils";
 
 export interface NavigationItem {
@@ -35,7 +37,10 @@ export const navigation: NavigationItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Customers", href: "/dashboard/customers", icon: Users, badge: "1.2k" },
   { name: "Menu", href: "/dashboard/menu", icon: Coffee },
+  { name: "Menu Generator", href: "/dashboard/menu-generator", icon: WandSparkles },
   { name: "QR Codes", href: "/dashboard/qr-codes", icon: QrCode, hasDot: true },
+  { name: "Staff Scanner", href: "/dashboard/scanner", icon: ScanLine },
+  { name: "Loyalty", href: "/dashboard/loyalty", icon: HeartHandshake },
   { name: "Rewards", href: "/dashboard/rewards", icon: Gift },
   { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
   { name: "Profile", href: "/dashboard/profile", icon: Settings2 },
@@ -91,7 +96,7 @@ function NavigationLinks({
             {!mobile && item.hasDot ? (
               <span
                 aria-label="Needs attention"
-                className="ml-auto h-2 w-2 rounded-full bg-gold shadow-[0_0_0_4px_#F59E0B1F]"
+                className="ml-auto h-2 w-2 rounded-full bg-gold shadow-[0_0_0_4px_var(--gold-soft)]"
               />
             ) : null}
           </Link>
@@ -103,13 +108,14 @@ function NavigationLinks({
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { business } = useAppData();
 
   return (
-    <aside className="desktop-sidebar hidden border-r border-line bg-surface-soft px-5 py-6 lg:flex lg:flex-col">
+    <aside className="desktop-sidebar hidden overflow-y-auto border-r border-line bg-surface-soft px-5 py-6 lg:flex lg:flex-col">
       <div className="flex items-center gap-3 px-2">
-        <div className="relative grid h-10 w-10 place-items-center rounded-[14px] bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-600 text-white shadow-[0_8px_18px_#7C3AED47]">
-          <span className="absolute inset-[5px] rounded-[10px] border border-white/25" />
-          <Sparkles aria-hidden="true" className="relative h-5 w-5 text-white" strokeWidth={1.8} />
+        <div className="relative grid h-10 w-10 place-items-center rounded-[14px] border border-purple-dark bg-purple text-white shadow-sm">
+          <span className="absolute inset-[5px] rounded-[5px] border border-white/25" />
+          <Coffee aria-hidden="true" className="relative h-5 w-5 text-white" strokeWidth={1.8} />
         </div>
         <div>
           <p className="text-[17px] font-bold leading-none tracking-[-.04em] text-ink">Perkly</p>
@@ -123,7 +129,7 @@ export function Sidebar() {
         className="soft-glass mt-8 flex h-auto w-full items-center justify-start gap-3 rounded-2xl px-3 py-3 text-left hover:bg-purple-wash"
         aria-label="Switch business"
       >
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gold-soft text-amber-700">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gold-soft text-accent-foreground">
           <Coffee aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
         </span>
         <span className="min-w-0 flex-1">
@@ -139,15 +145,15 @@ export function Sidebar() {
       </div>
 
       <div className="mt-auto space-y-3">
-        <div className="rounded-2xl border border-line bg-gradient-to-br from-purple-50/80 to-amber-50/60 p-3 dark:from-purple-500/10 dark:to-amber-500/5">
+        <div className="rounded-2xl border border-line bg-surface-solid p-3">
           <div className="flex items-center gap-2">
-            <span className="grid h-7 w-7 place-items-center rounded-lg bg-gold-soft text-amber-700">
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-gold-soft text-accent-foreground">
               <CircleHelp aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.8} />
             </span>
             <p className="text-[11px] font-bold text-ink">Need a hand?</p>
           </div>
           <p className="mt-2 text-[11px] leading-relaxed text-muted">Your loyalty guide is one click away.</p>
-          <Button variant="link" className="mt-2 h-auto p-0 text-[11px] font-bold text-purple-dark dark:text-purple-300">
+          <Button variant="link" className="mt-2 h-auto p-0 text-[11px] font-bold text-purple-dark">
             Open help center <span aria-hidden="true">→</span>
           </Button>
         </div>
@@ -158,8 +164,8 @@ export function Sidebar() {
           className="flex h-auto w-full items-center justify-start gap-3 rounded-2xl border border-transparent px-2 py-2 text-left hover:border-line hover:bg-purple-wash"
           aria-label="Open account menu"
         >
-          <Avatar size="default" className="h-9 w-9 bg-gradient-to-br from-amber-200 to-purple-200 text-purple-dark">
-            <AvatarFallback className="bg-transparent text-xs font-bold text-purple-dark">MK</AvatarFallback>
+          <Avatar size="default" className="h-9 w-9 bg-purple-soft text-purple-dark">
+            <AvatarFallback className="bg-transparent text-xs font-bold text-purple-dark">{business.ownerName.split(" ").map((part) => part[0]).join("")}</AvatarFallback>
           </Avatar>
           <span className="min-w-0 flex-1">
             <span className="block truncate text-xs font-bold text-ink">{business.ownerName}</span>

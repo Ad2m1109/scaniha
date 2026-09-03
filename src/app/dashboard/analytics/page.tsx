@@ -1,78 +1,21 @@
 "use client";
 
-import { BarChart3, Coffee, TrendingUp, Users } from "lucide-react";
-
-import { Card, CardContent } from "@/components/ui/card";
+import { useMemo, useState } from "react";
+import type { LucideIcon } from "lucide-react";
+import { Coins, Eye, Footprints, Gift, QrCode, Users } from "lucide-react";
+import { MemberActivityChart } from "@/components/dashboard/MemberActivityChart";
 import { PageIntro } from "@/components/shared/PageIntro";
-
-const stats = [
-  {
-    title: "Total revenue",
-    value: "DA 124,500",
-    change: "+15%",
-    icon: TrendingUp,
-    iconClassName: "bg-gold-soft text-amber-700",
-    accentClassName: "bg-gold",
-  },
-  {
-    title: "New members",
-    value: "48",
-    change: "+8%",
-    icon: Users,
-    iconClassName: "bg-purple-soft text-purple",
-    accentClassName: "bg-purple",
-  },
-  {
-    title: "Total orders",
-    value: "342",
-    change: "+12%",
-    icon: Coffee,
-    iconClassName: "bg-gold-soft text-amber-700",
-    accentClassName: "bg-gold",
-  },
-  {
-    title: "Conversion rate",
-    value: "24%",
-    change: "+3%",
-    icon: BarChart3,
-    iconClassName: "bg-success-soft text-success",
-    accentClassName: "bg-success",
-  },
-];
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useAppData } from "@/context/AppDataContext";
+import { analyticsTotals } from "@/lib/analytics";
+import { formatNumber } from "@/lib/formatters";
+import type { ChartRange } from "@/types";
 
 export default function AnalyticsPage() {
-  return (
-    <div className="mx-auto max-w-[1280px] space-y-6">
-      <PageIntro
-        eyebrow="Performance"
-        title="Know what's working at the counter."
-        description="Track revenue, member growth, and order volume across your cafe."
-      />
-
-      <section aria-label="Performance metrics" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={stat.title} className="glass-card min-w-0 border-0 p-0 ring-0">
-              <CardContent className="flex min-h-[150px] flex-col p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <span className={`grid h-9 w-9 place-items-center rounded-xl ${stat.iconClassName}`}>
-                    <Icon aria-hidden="true" className="h-[18px] w-[18px]" strokeWidth={1.8} />
-                  </span>
-                  <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
-                    {stat.change}
-                  </span>
-                </div>
-                <div className="mt-auto">
-                  <p className="metric-value">{stat.value}</p>
-                  <p className="mt-2 text-xs font-medium text-muted">{stat.title}</p>
-                </div>
-                <span className={`stat-accent mt-4 block h-1 w-2/3 rounded-full ${stat.accentClassName}`} />
-              </CardContent>
-            </Card>
-          );
-        })}
-      </section>
-    </div>
-  );
+  const data = useAppData(); const [range, setRange] = useState<ChartRange>("30D"); const totals = useMemo(() => analyticsTotals(data, range), [data, range]);
+  const stats: { label: string; value: number; icon: LucideIcon; style: string }[] = [
+    { label: "Menu views", value: totals.menuViews, icon: Eye, style: "bg-purple-soft text-purple" }, { label: "QR scans", value: totals.qrScans, icon: QrCode, style: "bg-secondary text-foreground" }, { label: "New customers", value: totals.customers, icon: Users, style: "bg-purple-soft text-purple" }, { label: "Visits", value: totals.visits, icon: Footprints, style: "bg-success-soft text-success" }, { label: "Points issued", value: totals.pointsIssued, icon: Coins, style: "bg-gold-soft text-accent-foreground" }, { label: "Points redeemed", value: totals.pointsRedeemed, icon: Coins, style: "bg-secondary text-foreground" }, { label: "Rewards redeemed", value: totals.rewardsRedeemed, icon: Gift, style: "bg-gold-soft text-accent-foreground" },
+  ];
+  return <div className="mx-auto max-w-[1280px] space-y-6"><PageIntro eyebrow="Performance" title="Know what’s working at the counter." description="Measure menu discovery and loyalty activity using real actions in this workspace." action={<div className="flex rounded-xl border border-line bg-surface-soft p-1">{(["7D", "30D", "90D"] as ChartRange[]).map((item) => <Button key={item} variant="ghost" size="sm" className="range-button h-8" data-active={range === item} onClick={() => setRange(item)}>{item}</Button>)}</div>} /><section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{stats.map((stat) => { const Icon = stat.icon; return <Card key={stat.label} className="glass-card border-0 ring-0"><CardContent className="flex items-center gap-4 p-5"><span className={`grid h-10 w-10 place-items-center rounded-xl ${stat.style}`}><Icon className="h-4 w-4" /></span><div><p className="metric-value text-xl">{formatNumber(stat.value)}</p><p className="mt-1 text-xs text-muted">{stat.label}</p></div></CardContent></Card>; })}</section><MemberActivityChart key={range} defaultRange={range} /></div>;
 }

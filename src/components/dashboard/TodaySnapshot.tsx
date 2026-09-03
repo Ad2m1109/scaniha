@@ -27,14 +27,14 @@ const snapshotItems: SnapshotItem[] = [
     description: "Mostly free latte redemptions",
     value: "38",
     icon: TicketCheck,
-    iconClassName: "bg-gold-soft text-amber-700",
+    iconClassName: "bg-gold-soft text-accent-foreground",
   },
   {
     label: "Returning guests",
     description: "Came back within 7 days",
     value: "71%",
     icon: Repeat2,
-    iconClassName: "bg-emerald-100 text-emerald-700",
+    iconClassName: "bg-success-soft text-success",
   },
 ];
 
@@ -46,7 +46,7 @@ export function TodaySnapshot() {
           <CardTitle className="card-title">Today&apos;s snapshot</CardTitle>
           <p className="mt-1 text-xs text-muted">A quick pulse from the floor</p>
         </div>
-        <Badge className="h-auto rounded-full border-0 bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">Live</Badge>
+        <Badge className="h-auto rounded-full border-0 bg-success-soft px-2.5 py-1 text-[10px] font-bold text-success">Live</Badge>
       </CardHeader>
       <CardContent className="p-5 pt-4 sm:p-6 sm:pt-4">
         <div>
@@ -69,7 +69,7 @@ export function TodaySnapshot() {
             );
           })}
         </div>
-        <Button variant="outline" type="button" className="mt-5 flex w-full items-center justify-between rounded-xl border-line bg-surface-soft px-3.5 text-xs font-bold text-purple-dark hover:border-purple-300 hover:bg-purple-wash dark:text-purple-300">
+        <Button variant="outline" type="button" className="mt-5 flex w-full items-center justify-between rounded-xl border-line bg-surface-soft px-3.5 text-xs font-bold text-purple-dark hover:border-line-strong hover:bg-purple-wash">
           View activity
           <ArrowUpRight aria-hidden="true" className="h-4 w-4 text-purple" strokeWidth={1.8} />
         </Button>
