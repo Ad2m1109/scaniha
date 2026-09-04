@@ -406,6 +406,35 @@
     color: #FFFFFF;
   }
 
+  .dashboard-app.dark .soft-glass {
+    background: #241A3DB8;
+    border-color: #DACCFF21;
+  }
+
+  .dashboard-app.dark .soft-glass .text-ink {
+    color: #F7F3FF;
+  }
+
+  .dashboard-app.dark .soft-glass .text-muted {
+    color: #DDD6FE;
+  }
+
+  .dashboard-app.dark .soft-glass .text-faint {
+    color: #B8AEC9;
+  }
+
+  .dashboard-app.dark .glass-card .text-ink {
+    color: #F7F3FF;
+  }
+
+  .dashboard-app.dark .glass-card .text-muted {
+    color: #DDD6FE;
+  }
+
+  .dashboard-app.dark .glass-card .text-faint {
+    color: #B8AEC9;
+  }
+
   .dashboard-app .mobile-menu-panel {
     display: none;
   }
