@@ -380,59 +380,128 @@
     color: #DDD6FE;
   }
 
+  .dashboard-app .hero-card,
+  .dashboard-app .hero-card * {
+    --tw-text-opacity: 1;
+  }
+
   .dashboard-app .hero-card .text-muted,
   .dashboard-app .hero-card .text-faint {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.7) !important;
   }
 
-  .dashboard-app .hero-card .text-ink {
-    color: #FFFFFF;
-  }
-
+  .dashboard-app .hero-card .text-ink,
   .dashboard-app .hero-card .numeric {
-    color: #FFFFFF;
+    color: #FFFFFF !important;
+  }
+
+  .dashboard-app .loyalty-card,
+  .dashboard-app .loyalty-card * {
+    --tw-text-opacity: 1;
   }
 
   .dashboard-app .loyalty-card .text-muted,
   .dashboard-app .loyalty-card .text-faint {
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.65) !important;
   }
 
-  .dashboard-app .loyalty-card .text-ink {
-    color: #FFFFFF;
-  }
-
+  .dashboard-app .loyalty-card .text-ink,
   .dashboard-app .loyalty-card .numeric {
-    color: #FFFFFF;
+    color: #FFFFFF !important;
   }
 
-  .dashboard-app.dark .soft-glass {
-    background: #241A3DB8;
-    border-color: #DACCFF21;
+  .dashboard-app.dark .soft-glass,
+  .dashboard-app.dark .soft-glass * {
+    --tw-text-opacity: 1;
   }
 
   .dashboard-app.dark .soft-glass .text-ink {
-    color: #F7F3FF;
+    color: #F7F3FF !important;
   }
 
   .dashboard-app.dark .soft-glass .text-muted {
-    color: #DDD6FE;
+    color: #DDD6FE !important;
   }
 
   .dashboard-app.dark .soft-glass .text-faint {
-    color: #B8AEC9;
+    color: #B8AEC9 !important;
+  }
+
+  .dashboard-app.dark .glass-card,
+  .dashboard-app.dark .glass-card * {
+    --tw-text-opacity: 1;
   }
 
   .dashboard-app.dark .glass-card .text-ink {
-    color: #F7F3FF;
+    color: #F7F3FF !important;
   }
 
   .dashboard-app.dark .glass-card .text-muted {
-    color: #DDD6FE;
+    color: #DDD6FE !important;
+  }
+
+  .dashboard-app .hero-card,
+  .dashboard-app .hero-card * {
+    --tw-text-opacity: 1;
+  }
+
+  .dashboard-app .hero-card .text-muted,
+  .dashboard-app .hero-card .text-faint {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  .dashboard-app .hero-card .text-ink,
+  .dashboard-app .hero-card .numeric {
+    color: #FFFFFF !important;
+  }
+
+  .dashboard-app .loyalty-card,
+  .dashboard-app .loyalty-card * {
+    --tw-text-opacity: 1;
+  }
+
+  .dashboard-app .loyalty-card .text-muted,
+  .dashboard-app .loyalty-card .text-faint {
+    color: rgba(255, 255, 255, 0.65) !important;
+  }
+
+  .dashboard-app .loyalty-card .text-ink,
+  .dashboard-app .loyalty-card .numeric {
+    color: #FFFFFF !important;
+  }
+
+  .dashboard-app.dark .soft-glass,
+  .dashboard-app.dark .soft-glass * {
+    --tw-text-opacity: 1;
+  }
+
+  .dashboard-app.dark .soft-glass .text-ink {
+    color: #F7F3FF !important;
+  }
+
+  .dashboard-app.dark .soft-glass .text-muted {
+    color: #DDD6FE !important;
+  }
+
+  .dashboard-app.dark .soft-glass .text-faint {
+    color: #B8AEC9 !important;
+  }
+
+  .dashboard-app.dark .glass-card,
+  .dashboard-app.dark .glass-card * {
+    --tw-text-opacity: 1;
+  }
+
+  .dashboard-app.dark .glass-card .text-ink {
+    color: #F7F3FF !important;
+  }
+
+  .dashboard-app.dark .glass-card .text-muted {
+    color: #DDD6FE !important;
   }
 
   .dashboard-app.dark .glass-card .text-faint {
-    color: #B8AEC9;
+    color: #B8AEC9 !important;
   }
 
   .dashboard-app .mobile-menu-panel {

@@ -60,10 +60,10 @@ export function TodaySnapshot() {
                     <Icon aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-xs font-bold text-ink">{item.label}</p>
-                    <p className="mt-0.5 truncate text-[11px] text-muted">{item.description}</p>
+                    <p className="truncate text-xs font-bold" style={{ color: 'var(--ink)' }}>{item.label}</p>
+                    <p className="mt-0.5 truncate text-[11px]" style={{ color: 'var(--muted)' }}>{item.description}</p>
                   </div>
-                  <span className="numeric text-base font-bold text-ink">{item.value}</span>
+                  <span className="numeric text-base font-bold" style={{ color: 'var(--ink)' }}>{item.value}</span>
                 </div>
               </div>
             );

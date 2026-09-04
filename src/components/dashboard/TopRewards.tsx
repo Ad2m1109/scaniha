@@ -44,8 +44,8 @@ export function TopRewards() {
                 <Icon aria-hidden="true" className="h-[18px] w-[18px]" strokeWidth={1.8} />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-bold text-ink">{reward.name}</p>
-                <p className="mt-0.5 truncate text-[11px] text-muted">{reward.description}</p>
+                <p className="truncate text-xs font-bold" style={{ color: 'var(--ink)' }}>{reward.name}</p>
+                <p className="mt-0.5 truncate text-[11px]" style={{ color: 'var(--muted)' }}>{reward.description}</p>
               </div>
               <Badge className="h-auto shrink-0 rounded-full border-0 bg-gold-soft px-2.5 py-1 text-[10px] font-bold text-accent-foreground">{formatPoints(reward.pointsRequired)}</Badge>
             </div>
