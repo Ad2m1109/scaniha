@@ -25,11 +25,11 @@ export function ProgramHealthHero() {
               <Sparkles aria-hidden="true" className="h-3.5 w-3.5 text-gold" strokeWidth={1.8} />
               Rewards unlocked
             </Badge>
-            <Badge className="h-auto rounded-full border border-line bg-white px-3 py-1.5 text-[11px] font-semibold" style={{ color: 'var(--ink)' }}>
+            <Badge className="h-auto rounded-full border border-line bg-white px-3 py-1.5 text-[11px] font-semibold" style={{ color: '#25183D' }}>
               This month
             </Badge>
           </div>
-          <h2 className="mt-5 max-w-lg text-[25px] font-bold leading-[1.12] tracking-[-.045em] sm:text-[30px]">
+          <h2 className="mt-5 max-w-lg text-[25px] font-bold leading-[1.12] tracking-[-.045em] sm:text-[30px]" style={{ color: '#FFFFFF' }}>
             Your loyalty program is on a roll.
           </h2>
           <p className="mt-3 max-w-xl text-sm leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
@@ -55,20 +55,20 @@ export function ProgramHealthHero() {
         </div>
 
         <div className="soft-glass rounded-2xl border-line bg-white p-5 shadow-sm">
-          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'var(--ink)' }}>
+          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: '#25183D' }}>
             <span>Active members</span>
             <ArrowUpRight aria-hidden="true" className="h-4 w-4 text-purple" strokeWidth={1.8} />
           </div>
           <div className="mt-3 flex items-end gap-3">
-            <p className="numeric text-[42px] font-bold leading-none tracking-[-.06em]" style={{ color: 'var(--ink)' }}>{formatNumber(data.customers.length)}</p>
+            <p className="numeric text-[42px] font-bold leading-none tracking-[-.06em]" style={{ color: '#25183D' }}>{formatNumber(data.customers.length)}</p>
             <Badge className="mb-1 h-auto rounded-full border-0 bg-success-soft px-2 py-1 text-[10px] font-bold text-success">
               +{formatPercent(data.customers.length / Math.max(1, business.memberGoal))}
             </Badge>
           </div>
           <div className="mt-5 h-px bg-line" />
           <div className="mt-3 flex items-center justify-between text-[11px] font-semibold">
-            <span style={{ color: 'var(--muted)' }}>vs. last month</span>
-            <span className="numeric" style={{ color: 'var(--ink)' }}>+146 members</span>
+            <span style={{ color: '#736B84' }}>vs. last month</span>
+            <span className="numeric" style={{ color: '#25183D' }}>+146 members</span>
           </div>
         </div>
       </div>

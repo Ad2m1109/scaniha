@@ -286,10 +286,6 @@
     transform: rotate(28deg);
   }
 
-  .dashboard-app .hero-card .soft-glass {
-    background: #FFFFFF1A;
-  }
-
   .dashboard-app .loyalty-card {
     position: relative;
     overflow: hidden;
