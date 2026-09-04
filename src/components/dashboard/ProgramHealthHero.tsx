@@ -24,42 +24,42 @@ export function ProgramHealthHero() {
               <Sparkles aria-hidden="true" className="h-3.5 w-3.5 text-gold" strokeWidth={1.8} />
               Rewards unlocked
             </Badge>
-            <Badge className="h-auto rounded-full border border-line bg-white px-3 py-1.5 text-[11px] font-semibold text-muted">
+            <Badge className="h-auto rounded-full border border-line bg-white px-3 py-1.5 text-[11px] font-semibold text-ink">
               This month
             </Badge>
           </div>
           <h2 className="mt-5 max-w-lg text-[25px] font-bold leading-[1.12] tracking-[-.045em] sm:text-[30px]">
             Your loyalty program is on a roll.
           </h2>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/75">
             Members are visiting more often and redeeming rewards faster than last month. Keep the momentum going.
           </p>
           <div className="mt-7 max-w-xl">
-            <div className="flex items-center justify-between gap-4 text-[11px] font-semibold text-muted">
+            <div className="flex items-center justify-between gap-4 text-[11px] font-semibold text-white/75">
               <span>Member goal progress</span>
-              <span className="numeric text-ink">
-                {formatNumber(data.customers.length)} <span className="font-normal text-muted">/ {formatNumber(business.memberGoal)} members</span>
+              <span className="numeric text-white">
+                {formatNumber(data.customers.length)} <span className="font-normal text-white/60">/ {formatNumber(business.memberGoal)} members</span>
               </span>
             </div>
             <Progress
               value={memberProgress}
               aria-label="Member goal progress"
-              className="mt-2 flex-1 gap-0 [&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:bg-white [&_[data-slot=progress-indicator]]:bg-purple"
+              className="mt-2 flex-1 gap-0 [&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:bg-white/20 [&_[data-slot=progress-indicator]]:bg-gold"
             />
-            <div className="mt-2 flex items-center justify-between gap-4 text-[10px] font-semibold text-muted">
+            <div className="mt-2 flex items-center justify-between gap-4 text-[10px] font-semibold text-white/60">
               <span>Keep inviting your regulars</span>
-              <span className="numeric">{memberProgress}%</span>
+              <span className="numeric text-white">{memberProgress}%</span>
             </div>
           </div>
         </div>
 
         <div className="soft-glass rounded-2xl border-line bg-white p-5 shadow-sm">
-          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[.16em] text-muted">
+          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[.16em] text-ink">
             <span>Active members</span>
             <ArrowUpRight aria-hidden="true" className="h-4 w-4 text-purple" strokeWidth={1.8} />
           </div>
           <div className="mt-3 flex items-end gap-3">
-            <p className="numeric text-[42px] font-bold leading-none tracking-[-.06em]">{formatNumber(data.customers.length)}</p>
+            <p className="numeric text-[42px] font-bold leading-none tracking-[-.06em] text-ink">{formatNumber(data.customers.length)}</p>
             <Badge className="mb-1 h-auto rounded-full border-0 bg-success-soft px-2 py-1 text-[10px] font-bold text-success">
               +{formatPercent(data.customers.length / Math.max(1, business.memberGoal))}
             </Badge>

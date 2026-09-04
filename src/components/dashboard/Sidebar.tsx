@@ -136,10 +136,10 @@ export function Sidebar() {
           <span className="block truncate text-xs font-semibold text-ink">{business.name}</span>
           <span className="mt-0.5 block text-[11px] text-muted">{business.location}</span>
         </span>
-        <ChevronsUpDown aria-hidden="true" className="h-4 w-4 shrink-0 text-faint" strokeWidth={1.8} />
+        <ChevronsUpDown aria-hidden="true" className="h-4 w-4 shrink-0 text-muted" strokeWidth={1.8} />
       </Button>
 
-      <div className="mt-8 px-3 text-[10px] font-bold uppercase tracking-[.18em] text-faint">Workspace</div>
+       <div className="mt-8 px-3 text-[10px] font-bold uppercase tracking-[.18em] text-muted">Workspace</div>
       <div className="mt-3">
         <NavigationLinks pathname={pathname} />
       </div>
@@ -171,7 +171,7 @@ export function Sidebar() {
             <span className="block truncate text-xs font-bold text-ink">{business.ownerName}</span>
             <span className="block truncate text-[11px] text-muted">Owner account</span>
           </span>
-          <MoreHorizontal aria-hidden="true" className="h-4 w-4 text-faint" strokeWidth={1.8} />
+          <MoreHorizontal aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.8} />
         </Button>
       </div>
     </aside>
@@ -183,7 +183,7 @@ export function MobileNavigation({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <div className="mobile-menu-panel glass-card rounded-2xl p-3 shadow-md lg:hidden">
-      <div className="mb-2 px-3 pt-2 text-[10px] font-bold uppercase tracking-[.18em] text-faint">Workspace</div>
+      <div className="mb-2 px-3 pt-2 text-[10px] font-bold uppercase tracking-[.18em] text-muted">Workspace</div>
       <NavigationLinks pathname={pathname} onNavigate={onNavigate} mobile />
     </div>
   );

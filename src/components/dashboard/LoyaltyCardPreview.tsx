@@ -39,31 +39,31 @@ export function LoyaltyCardPreview() {
         </Button>
       </CardHeader>
       <CardContent className="p-5 pt-4 sm:p-6 sm:pt-5">
-        <div className="loyalty-card rounded-2xl p-5 text-ink sm:p-6">
+        <div className="loyalty-card rounded-2xl p-5 text-white sm:p-6">
           <div className="relative z-10 flex items-start justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <span className="grid h-8 w-8 place-items-center rounded-[10px] border border-line bg-white">
                 <Sparkles aria-hidden="true" className="h-4 w-4 text-gold" strokeWidth={1.8} />
               </span>
-              <span className="text-[13px] font-bold tracking-[-.02em]">{business.name}</span>
+              <span className="text-[13px] font-bold tracking-[-.02em] text-white">{business.name}</span>
             </div>
-            <Badge className="h-auto rounded-full border border-line bg-white px-2.5 py-1 text-[9px] font-bold uppercase tracking-[.15em] text-success">Gold tier</Badge>
+            <Badge className="h-auto rounded-full border border-line bg-white px-2.5 py-1 text-[9px] font-bold uppercase tracking-[.15em] text-accent-foreground">Gold tier</Badge>
           </div>
           <div className="relative z-10 mt-8 flex items-end justify-between gap-4">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[.16em] text-muted">{selectedMember.name}</p>
-              <p className="mt-1 text-[11px] text-muted">Member since Jan 2024</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[.16em] text-white/80">{selectedMember.name}</p>
+              <p className="mt-1 text-[11px] text-white/60">Member since Jan 2024</p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] uppercase tracking-[.13em] text-muted">Balance</p>
-              <p className="numeric mt-1 text-xl font-bold tracking-[-.04em]">
-                {formatNumber(selectedMember.points)} <span className="text-[10px] font-semibold text-muted">pts</span>
+              <p className="text-[10px] uppercase tracking-[.13em] text-white/80">Balance</p>
+              <p className="numeric mt-1 text-xl font-bold tracking-[-.04em] text-white">
+                {formatNumber(selectedMember.points)} <span className="text-[10px] font-semibold text-white/70">pts</span>
               </p>
             </div>
           </div>
           <div className="relative z-10 mt-6 flex items-center justify-between gap-3">
             <StampRow />
-            <span className="whitespace-nowrap text-[11px] font-bold text-success">8 / 10 stamps</span>
+            <span className="whitespace-nowrap text-[11px] font-bold text-gold">8 / 10 stamps</span>
           </div>
         </div>
         <div className="mt-4 flex items-center gap-2 text-[11px] font-semibold text-muted">
