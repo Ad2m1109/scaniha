@@ -13,7 +13,7 @@ export function loadAppState(): AppState {
     return {
       ...seedState,
       ...parsed,
-      business: { ...seedState.business, ...parsed.business },
+      business: { ...seedState.business, ...parsed.business, menuPdfUrl: parsed.business?.menuPdfUrl ?? seedState.business.menuPdfUrl },
       loyalty: { ...seedState.loyalty, ...parsed.loyalty },
       menuSettings: { ...seedState.menuSettings, ...parsed.menuSettings },
       categories: parsed.categories ?? seedState.categories,

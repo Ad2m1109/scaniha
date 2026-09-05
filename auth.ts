@@ -17,6 +17,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             "email",
             "profile",
             "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive.file",
           ].join(" "),
         },
       },

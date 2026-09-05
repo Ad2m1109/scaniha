@@ -34,7 +34,7 @@ export interface NavigationItem {
 
 export const navigation: NavigationItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Customers", href: "/dashboard/customers", icon: Users, badge: "1.2k" },
+  { name: "Customers", href: "/dashboard/customers", icon: Users },
   { name: "Menu", href: "/dashboard/menu", icon: Coffee },
   { name: "Menu Generator", href: "/dashboard/menu-generator", icon: WandSparkles },
   { name: "QR Codes", href: "/dashboard/qr-codes", icon: QrCode, hasDot: true },
@@ -55,16 +55,19 @@ function NavigationLinks({
   pathname,
   onNavigate,
   mobile = false,
+  customerBadge,
 }: {
   pathname: string;
   onNavigate?: () => void;
   mobile?: boolean;
+  customerBadge?: string;
 }) {
   return (
     <nav aria-label="Primary navigation" className={cn(mobile ? "grid grid-cols-2 gap-1" : "space-y-1")}>
       {navigation.map((item) => {
         const Icon = item.icon;
         const active = isNavigationActive(pathname, item.href);
+        const badge = item.name === "Customers" && customerBadge ? customerBadge : item.badge;
 
         return (
           <Link
@@ -84,12 +87,12 @@ function NavigationLinks({
               strokeWidth={1.8}
             />
             <span className="truncate">{item.name}</span>
-            {!mobile && item.badge ? (
+            {!mobile && badge ? (
               <Badge
                 variant="secondary"
                 className="ml-auto h-5 rounded-full bg-purple-soft px-2 py-0 text-[10px] font-bold text-purple-dark"
               >
-                {item.badge}
+                {badge}
               </Badge>
             ) : null}
             {!mobile && item.hasDot ? (
@@ -107,7 +110,10 @@ function NavigationLinks({
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { business } = useAppData();
+  const { business, customers } = useAppData();
+  const customerBadge = customers.length >= 1000
+    ? `${(customers.length / 1000).toFixed(1)}k`
+    : String(customers.length);
 
   return (
     <aside className="desktop-sidebar hidden overflow-y-auto border-r border-line bg-surface-soft px-5 py-6 lg:flex lg:flex-col">
@@ -140,7 +146,7 @@ export function Sidebar() {
 
        <div className="mt-8 px-3 text-[10px] font-bold uppercase tracking-[.18em] text-muted">Workspace</div>
       <div className="mt-3">
-        <NavigationLinks pathname={pathname} />
+        <NavigationLinks pathname={pathname} customerBadge={customerBadge} />
       </div>
 
       <div className="mt-auto space-y-3">

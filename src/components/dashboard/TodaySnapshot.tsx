@@ -1,44 +1,57 @@
-import type { LucideIcon } from "lucide-react";
+"use client";
+
+import { useMemo, useState } from "react";
 import { ArrowUpRight, Repeat2, TicketCheck, UserPlus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-
-interface SnapshotItem {
-  label: string;
-  description: string;
-  value: string;
-  icon: LucideIcon;
-  iconClassName: string;
-}
-
-const snapshotItems: SnapshotItem[] = [
-  {
-    label: "New members",
-    description: "Joined the program today",
-    value: "24",
-    icon: UserPlus,
-    iconClassName: "bg-purple-soft text-purple",
-  },
-  {
-    label: "Rewards claimed",
-    description: "Mostly free latte redemptions",
-    value: "38",
-    icon: TicketCheck,
-    iconClassName: "bg-gold-soft text-accent-foreground",
-  },
-  {
-    label: "Returning guests",
-    description: "Came back within 7 days",
-    value: "71%",
-    icon: Repeat2,
-    iconClassName: "bg-success-soft text-success",
-  },
-];
+import { useAppData } from "@/context/AppDataContext";
+import { formatNumber } from "@/lib/formatters";
 
 export function TodaySnapshot() {
+  const { customers, redemptions, visits } = useAppData();
+  const [now] = useState(() => Date.now());
+
+  const snapshotItems = useMemo(() => {
+    const today = new Date(now).toISOString().slice(0, 10);
+    const todayRedemptions = redemptions.filter((r) => r.createdAt.startsWith(today));
+    const todayCustomers = customers.filter((c) => c.joinedAt === today);
+
+    const sevenDaysAgo = new Date(now - 7 * 86_400_000).toISOString();
+    const recentVisitors = new Set(
+      visits.filter((v) => v.createdAt >= sevenDaysAgo).map((v) => v.customerId)
+    );
+    const returningRate = customers.length > 0
+      ? Math.round((recentVisitors.size / customers.length) * 100)
+      : 0;
+
+    return [
+      {
+        label: "New members",
+        description: "Joined the program today",
+        value: formatNumber(todayCustomers.length),
+        icon: UserPlus,
+        iconClassName: "bg-purple-soft text-purple",
+      },
+      {
+        label: "Rewards claimed",
+        description: "Redeemed today",
+        value: formatNumber(todayRedemptions.length),
+        icon: TicketCheck,
+        iconClassName: "bg-gold-soft text-accent-foreground",
+      },
+      {
+        label: "Returning guests",
+        description: "Came back within 7 days",
+        value: `${returningRate}%`,
+        icon: Repeat2,
+        iconClassName: "bg-success-soft text-success",
+      },
+    ];
+  }, [now, customers, redemptions, visits]);
+
   return (
     <Card className="glass-card min-w-0 border-0 p-0 ring-0">
       <CardHeader className="flex flex-row items-start justify-between gap-3 p-5 pb-0 sm:p-6 sm:pb-0">

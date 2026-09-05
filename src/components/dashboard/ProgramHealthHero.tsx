@@ -10,7 +10,18 @@ import { formatNumber, formatPercent } from "@/lib/formatters";
 export function ProgramHealthHero() {
   const data = useAppData();
   const business = data.business;
-  const memberProgress = Math.round((data.customers.length / business.memberGoal) * 100);
+  const memberProgress = Math.round((data.customers.length / Math.max(1, business.memberGoal)) * 100);
+
+  // Calculate growth: members joined this month vs last month
+  const now = new Date();
+  const thisMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const lastMonth = now.getMonth() === 0
+    ? `${now.getFullYear() - 1}-12`
+    : `${now.getFullYear()}-${String(now.getMonth()).padStart(2, "0")}`;
+
+  const thisMonthMembers = data.customers.filter((c) => c.joinedAt.startsWith(thisMonth)).length;
+  const lastMonthMembers = data.customers.filter((c) => c.joinedAt.startsWith(lastMonth)).length;
+  const memberGrowth = thisMonthMembers - lastMonthMembers;
 
   return (
     <section
@@ -68,7 +79,9 @@ export function ProgramHealthHero() {
           <div className="mt-5 h-px bg-line" />
           <div className="mt-3 flex items-center justify-between text-[11px] font-semibold">
             <span style={{ color: '#736B84' }}>vs. last month</span>
-            <span className="numeric" style={{ color: '#25183D' }}>+146 members</span>
+            <span className="numeric" style={{ color: '#25183D' }}>
+              {memberGrowth >= 0 ? "+" : ""}{memberGrowth} members
+            </span>
           </div>
         </div>
       </div>

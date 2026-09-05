@@ -31,6 +31,7 @@ export interface PublicSnapshot {
     heroImage: string;
     tagline: string;
   };
+  menuPdfUrl: string;
   categories: Category[];
   products: Product[];
 }
@@ -79,6 +80,7 @@ export function writeSnapshot(
       heroImage:  settings.heroImage  ?? "",
       tagline:    settings.tagline    ?? "",
     },
+    menuPdfUrl: business.menuPdfUrl ?? "",
     categories,
     products,
   };

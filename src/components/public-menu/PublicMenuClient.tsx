@@ -28,15 +28,16 @@ function snapshotToBusiness(s: PublicSnapshot): BusinessProfile {
     memberGoal:   0,
     createdAt:    "",
     tagline:      "",
+    menuPdfUrl:   s.menuPdfUrl || "",
   };
 }
 
 function snapshotToSettings(s: PublicSnapshot): MenuSettings {
   return {
-    template: "lavender",
+    template: (s.style.template as MenuSettings["template"]) || "lavender",
     currency:  s.style.currency  || "DA",
     heroImage: s.style.heroImage || "",
-    tagline:   "",
+    tagline:   s.style.tagline   || "",
   };
 }
 

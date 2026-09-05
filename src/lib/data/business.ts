@@ -17,4 +17,5 @@ export const business: BusinessProfile = {
   facebook: "",
   instagram: "@northstarcoffee",
   whatsapp: "+213555123456",
+  menuPdfUrl: "",
 };

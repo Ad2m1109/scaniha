@@ -59,6 +59,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<AppState>(seedState);
   const [ready, setReady] = useState(false);
 
+  // ── Load from remote on mount ──────────────────────────────────────────────
   useEffect(() => {
     async function init() {
       const localState = loadAppState();
@@ -66,8 +67,6 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
         const res = await fetch("/api/data");
         if (res.ok) {
           const remoteData = await res.json();
-          // Always apply server-assigned businessId if present — ensures QR
-          // code points to the correct stable ID even before first save.
           const serverBusinessId: string | undefined = remoteData.businessId;
           if (!remoteData.notFound) {
             setState({
@@ -78,13 +77,18 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
                 ...(serverBusinessId ? { id: serverBusinessId } : {}),
               },
               menuSettings: { ...localState.menuSettings, ...remoteData.settings },
-              categories: remoteData.categories ?? [],
-              products: remoteData.products ?? [],
+              categories: remoteData.categories ?? localState.categories,
+              products: remoteData.products ?? localState.products,
+              customers: remoteData.customers ?? localState.customers,
+              rewards: remoteData.rewards ?? localState.rewards,
+              loyalty: remoteData.loyalty ?? localState.loyalty,
+              visits: remoteData.visits ?? localState.visits,
+              redemptions: remoteData.redemptions ?? localState.redemptions,
+              menuViews: remoteData.menuViews ?? localState.menuViews,
             });
             setReady(true);
             return;
           }
-          // notFound but we still have the stable businessId
           if (serverBusinessId) {
             setState({
               ...localState,
@@ -103,10 +107,11 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     init();
   }, []);
 
+  // ── Auto-save to localStorage + remote ─────────────────────────────────────
   useEffect(() => {
     if (!ready) return;
     saveAppState(state);
-    
+
     const timer = setTimeout(() => {
       fetch("/api/data", {
         method: "POST",
@@ -116,20 +121,39 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
           menuSettings: state.menuSettings,
           categories: state.categories,
           products: state.products,
+          customers: state.customers,
+          rewards: state.rewards,
+          loyalty: state.loyalty,
+          visits: state.visits,
+          redemptions: state.redemptions,
+          menuViews: state.menuViews,
         }),
       })
         .then((res) => {
-          if (!res.ok) toast.error("Failed to publish menu changes");
+          if (!res.ok) toast.error("Failed to sync changes");
         })
         .catch((e) => {
           console.error("Failed to save remote data", e);
-          toast.error("Network error while publishing menu");
+          toast.error("Network error while syncing");
         });
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, [ready, state.business, state.menuSettings, state.categories, state.products]);
+  }, [
+    ready,
+    state.business,
+    state.menuSettings,
+    state.categories,
+    state.products,
+    state.customers,
+    state.rewards,
+    state.loyalty,
+    state.visits,
+    state.redemptions,
+    state.menuViews,
+  ]);
 
+  // ── Category CRUD ──────────────────────────────────────────────────────────
   const addCategory = useCallback((input: Omit<Category, "id" | "sortOrder">) => {
     setState((current) => ({
       ...current,
@@ -152,6 +176,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     toast.success("Category removed");
   }, []);
 
+  // ── Product CRUD ───────────────────────────────────────────────────────────
   const saveProduct = useCallback((product: Omit<Product, "id" | "sortOrder"> & { id?: string }) => {
     setState((current) => {
       if (product.id) {
@@ -179,6 +204,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
+  // ── Customer CRUD ──────────────────────────────────────────────────────────
   const addCustomer = useCallback((input: NewCustomer) => {
     const customer: Customer = {
       ...input,
@@ -210,6 +236,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     toast.success("Customer removed");
   }, []);
 
+  // ── Reward CRUD ────────────────────────────────────────────────────────────
   const saveReward = useCallback((reward: Omit<Reward, "id" | "redemptions"> & { id?: string }) => {
     setState((current) => reward.id
       ? { ...current, rewards: current.rewards.map((item) => item.id === reward.id ? { ...item, ...reward, id: item.id } : item) }
@@ -222,6 +249,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     toast.success("Reward removed");
   }, []);
 
+  // ── Business / Loyalty / Settings ──────────────────────────────────────────
   const updateBusiness = useCallback((business: BusinessProfile) => {
     setState((current) => ({ ...current, business }));
     toast.success("Business profile saved");
@@ -237,6 +265,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     toast.success("Menu design saved");
   }, []);
 
+  // ── Activity recording ─────────────────────────────────────────────────────
   const recordVisit = useCallback((customerId: string): Result => {
     const customer = state.customers.find((item) => item.id === customerId);
     if (!customer) { toast.error("Customer not found"); return { ok: false, message: "Customer not found" }; }

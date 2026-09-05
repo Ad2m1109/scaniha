@@ -113,6 +113,7 @@ export interface BusinessProfile extends Business {
   facebook: string;
   instagram: string;
   whatsapp: string;
+  menuPdfUrl: string;
 }
 
 export interface AppState {

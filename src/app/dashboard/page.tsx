@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { CalendarDays, ChevronDown, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { QrCode, ScanLine, UserPlus, WandSparkles } from "lucide-react";
@@ -13,6 +14,13 @@ import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { TopRewards } from "@/components/dashboard/TopRewards";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAppData } from "@/context/AppDataContext";
+
+function DateRange() {
+  const [now] = useState(() => Date.now());
+  const start = new Date(now).toLocaleDateString("en", { month: "short", day: "numeric" });
+  const end = new Date(now + 6 * 86_400_000).toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" });
+  return <>{start} — {end}</>;
+}
 
 export default function DashboardPage() {
   const { business } = useAppData();
@@ -34,7 +42,7 @@ export default function DashboardPage() {
         </div>
         <Button variant="outline" type="button" className="soft-glass h-10 shrink-0 gap-2 rounded-xl px-3.5 text-xs font-semibold text-muted shadow-sm hover:border-line-strong hover:text-ink" aria-label="Choose date range">
           <CalendarDays aria-hidden="true" className="h-4 w-4 text-purple" strokeWidth={1.8} />
-          Jul 01 — Jul 07, 2026
+          <DateRange />
           <ChevronDown aria-hidden="true" className="h-3.5 w-3.5 text-faint" strokeWidth={1.8} />
         </Button>
       </section>
