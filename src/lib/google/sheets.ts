@@ -83,7 +83,7 @@ export async function ensureSheetsExist(
 
 // ─── Column order constants ───────────────────────────────────────────────────
 const BUSINESS_HEADERS = [
-  "id", "name", "logo", "phone", "address", "description",
+  "id", "name", "ownerName", "logo", "phone", "address", "description",
   "facebook", "instagram", "whatsapp",
   "template", "currency", "heroImage", "tagline", "menuPdfUrl",
 ];
@@ -118,6 +118,7 @@ function businessToRow(b: BusinessProfile, s: MenuSettings): string[] {
   return [
     b.id,
     b.name,
+    b.ownerName ?? "",
     b.logo ?? "",
     b.phone ?? "",
     b.address ?? "",
@@ -179,23 +180,24 @@ function rowToBusiness(row: string[]): Partial<BusinessProfile> {
   return {
     id:          row[0],
     name:        row[1],
-    logo:        row[2],
-    phone:       row[3],
-    address:     row[4],
-    description: row[5],
-    facebook:    row[6],
-    instagram:   row[7],
-    whatsapp:    row[8],
-    menuPdfUrl:  row[13] || "",
+    ownerName:   row[2] || "",
+    logo:        row[3],
+    phone:       row[4],
+    address:     row[5],
+    description: row[6],
+    facebook:    row[7],
+    instagram:   row[8],
+    whatsapp:    row[9],
+    menuPdfUrl:  row[14] || "",
   };
 }
 
 function rowToSettings(row: string[]): Partial<MenuSettings> {
   return {
-    template:   (row[9] as MenuSettings["template"]) || undefined,
-    currency:   row[10] || "DA",
-    heroImage:  row[11] || "",
-    tagline:    row[12] || "",
+    template:   (row[10] as MenuSettings["template"]) || undefined,
+    currency:   row[11] || "DA",
+    heroImage:  row[12] || "",
+    tagline:    row[13] || "",
   };
 }
 

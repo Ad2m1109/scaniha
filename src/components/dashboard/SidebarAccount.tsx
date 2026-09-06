@@ -1,14 +1,15 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { LogOut } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { handleSignOut } from "@/app/actions/auth";
-import { useAppData } from "@/context/AppDataContext";
 
 export function SidebarAccount() {
-  const { business } = useAppData();
-  const initials = business.ownerName
+  const { data: session } = useSession();
+  const userName = session?.user?.name || "";
+  const initials = userName
     .split(" ")
     .map((p) => p[0])
     .join("");
@@ -25,7 +26,7 @@ export function SidebarAccount() {
       </Avatar>
       <span className="min-w-0 flex-1">
         <span className="block truncate text-xs font-bold text-ink">
-          {business.ownerName || "My Account"}
+          {userName || "My Account"}
         </span>
         <span className="block truncate text-[11px] text-muted">Owner account</span>
       </span>

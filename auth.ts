@@ -47,6 +47,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           saveOwnerMapping(mapping);
         }
         token.businessId = mapping.businessId;
+        token.onboardingComplete = mapping.onboardingComplete ?? false;
       }
 
       // Refresh access_token if it has expired
@@ -84,6 +85,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // Expose only safe fields to the client session
     async session({ session, token }) {
       session.user.businessId = token.businessId as string;
+      session.user.onboardingComplete = token.onboardingComplete as boolean;
       // NOTE: accessToken and refreshToken are intentionally NOT passed to the
       // client session. They are only used in server-side API routes via
       // the JWT (retrieved with auth() on the server).
@@ -95,7 +97,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
     // Redirect to dashboard after successful sign-in
     async redirect({ url, baseUrl }) {
-      if (url === "/") return `${baseUrl}/dashboard`;
+      // After OAuth callback, check if onboarding is needed
+      if (url === "/") {
+        return `${baseUrl}/dashboard`;
+      }
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       if (new URL(url).origin === baseUrl) return url;
       return `${baseUrl}/dashboard`;

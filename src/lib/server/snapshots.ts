@@ -17,6 +17,7 @@ export interface PublicSnapshot {
   publishedAt: string;
   business: {
     name: string;
+    ownerName: string;
     logo: string;
     phone: string;
     address: string;
@@ -66,6 +67,7 @@ export function writeSnapshot(
     publishedAt: new Date().toISOString(),
     business: {
       name:        business.name        ?? "",
+      ownerName:   business.ownerName   ?? "",
       logo:        business.logo        ?? "",
       phone:       business.phone       ?? "",
       address:     business.address     ?? "",

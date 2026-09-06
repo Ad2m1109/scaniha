@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import { CalendarDays, ChevronDown, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { QrCode, ScanLine, UserPlus, WandSparkles } from "lucide-react";
@@ -22,20 +23,31 @@ function DateRange() {
   return <>{start} — {end}</>;
 }
 
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
+
 export default function DashboardPage() {
   const { business } = useAppData();
+  const { data: session } = useSession();
+  const firstName = session?.user?.name?.split(" ")[0] || "";
   return (
     <div className="mx-auto max-w-[1280px]">
       <section className="reveal flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <p className="eyebrow">Program overview</p>
           <div className="mt-2 flex flex-wrap items-center gap-3">
-            <h2 className="page-title">Your customer love, at a glance.</h2>
+            <h2 className="page-title">
+              {firstName ? `${getGreeting()}, ${firstName}.` : "Your customer love, at a glance."}
+            </h2>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface-soft px-3 py-1.5 text-[11px] font-semibold text-muted">
               <span className="grid h-5 w-5 place-items-center rounded-md bg-gold-soft text-accent-foreground">
                 <Sparkles aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.8} />
               </span>
-              {business.name}
+              {business.name || "Your cafe"}
             </span>
           </div>
           <p className="body-copy mt-2 max-w-xl">Turn everyday visits into lasting habits with a loyalty program your regulars actually want to use.</p>

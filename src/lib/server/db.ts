@@ -5,6 +5,7 @@ export interface OwnerMapping {
   sub: string;
   businessId: string;
   spreadsheetId?: string;
+  onboardingComplete?: boolean;
 }
 
 const dbDir = path.join(process.cwd(), ".data");

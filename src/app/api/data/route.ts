@@ -7,7 +7,7 @@ import {
   saveToGoogleSheets,
   ensureSheetsExist,
 } from "@/lib/google/sheets";
-import { writeSnapshot } from "@/lib/server/snapshots";
+import { writeSnapshot, readSnapshot } from "@/lib/server/snapshots";
 
 // ─── GET /api/data ────────────────────────────────────────────────────────────
 export async function GET(req: NextRequest) {
@@ -20,23 +20,43 @@ export async function GET(req: NextRequest) {
   const mapping = getOwnerMapping(sub);
   const businessId = mapping?.businessId ?? (token.businessId as string);
 
-  if (!mapping?.spreadsheetId) {
-    return NextResponse.json({ notFound: true, businessId });
+  // Try Google Sheets first
+  if (mapping?.spreadsheetId) {
+    try {
+      await ensureSheetsExist(token.accessToken as string, mapping.spreadsheetId);
+      const data = await loadFromGoogleSheets(
+        token.accessToken as string,
+        mapping.spreadsheetId
+      );
+      if (data) {
+        return NextResponse.json({ ...data, businessId });
+      }
+    } catch (e) {
+      console.error("Failed to load from Google Sheets:", e);
+    }
   }
 
-  // Ensure all sheets exist before reading
-  await ensureSheetsExist(token.accessToken as string, mapping.spreadsheetId);
-
-  const data = await loadFromGoogleSheets(
-    token.accessToken as string,
-    mapping.spreadsheetId
-  );
-
-  if (!data) {
-    return NextResponse.json({ notFound: true, businessId });
+  // Fallback: read from local snapshot file (for new users after onboarding)
+  if (businessId) {
+    const snapshot = readSnapshot(businessId);
+    if (snapshot) {
+      return NextResponse.json({
+        business: snapshot.business,
+        settings: snapshot.style,
+        categories: snapshot.categories,
+        products: snapshot.products,
+        customers: [],
+        rewards: [],
+        loyalty: { enabled: true, pointsPerVisit: 50, welcomeBonus: 100 },
+        visits: [],
+        redemptions: [],
+        menuViews: [],
+        businessId,
+      });
+    }
   }
 
-  return NextResponse.json({ ...data, businessId });
+  return NextResponse.json({ notFound: true, businessId });
 }
 
 // ─── POST /api/data ───────────────────────────────────────────────────────────

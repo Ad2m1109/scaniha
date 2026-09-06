@@ -244,13 +244,15 @@
       var(--page-bg);
   }
 
-  .dashboard-app .glass-card {
+  .dashboard-app .glass-card,
+  .auth-page .glass-card {
     background: var(--surface);
     border: 1px solid var(--line);
     box-shadow: var(--shadow);
   }
 
-  .dashboard-app .soft-glass {
+  .dashboard-app .soft-glass,
+  .auth-page .soft-glass {
     background: var(--surface-soft);
     border: 1px solid var(--line);
   }
