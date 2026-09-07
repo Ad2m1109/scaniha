@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "File too large (max 10MB)" }, { status: 400 });
     }
 
-    const validFolders = ["products", "rewards", "profile", "menu"] as const;
+    const validFolders = ["products", "rewards", "profile", "menu", "customers"] as const;
     if (!validFolders.includes(folder as typeof validFolders[number])) {
       return NextResponse.json({ error: "Invalid folder" }, { status: 400 });
     }
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
       token.accessToken as string,
       file,
       token.businessId as string,
-      folder as "products" | "rewards" | "profile" | "menu"
+      folder as "products" | "rewards" | "profile" | "menu" | "customers"
     );
 
     return NextResponse.json({ url });

@@ -3,8 +3,7 @@ import { getToken } from "next-auth/jwt";
 import { getOwnerMapping } from "@/lib/server/db";
 import { loadFromGoogleSheets } from "@/lib/google/sheets";
 import { generateMenuPdf } from "@/lib/pdf";
-import { getDriveClient, ensureFolder, ROOT_FOLDER_NAME } from "@/lib/google/drive";
-import { Readable } from "stream";
+import { uploadPdfVersioned } from "@/lib/google/drive";
 import type { MenuTemplateId } from "@/types";
 
 /**
@@ -19,7 +18,7 @@ export async function POST(req: NextRequest) {
   }
 
   const sub = token.googleSub as string;
-  const mapping = getOwnerMapping(sub);
+  const mapping = await getOwnerMapping(sub);
 
   if (!mapping?.spreadsheetId) {
     return NextResponse.json({ error: "No spreadsheet found" }, { status: 404 });
@@ -66,66 +65,12 @@ export async function POST(req: NextRequest) {
     }
   );
 
-  // Upload PDF to Google Drive under scaniha_data/{businessId}/menu/
-  const drive = getDriveClient(token.accessToken as string);
-
-  // Build folder hierarchy
-  const rootId = await ensureFolder(drive, ROOT_FOLDER_NAME);
-  const bizId = await ensureFolder(drive, mapping.businessId, rootId);
-  const menuFolderId = await ensureFolder(drive, "menu", bizId);
-
-  // Delete old PDF if it exists
-  const oldUrl = (data.business.menuPdfUrl as string) || "";
-  if (oldUrl) {
-    const oldFileId = extractFileId(oldUrl);
-    if (oldFileId) {
-      try {
-        await drive.files.delete({ fileId: oldFileId });
-      } catch {
-        // Ignore - file may already be deleted
-      }
-    }
-  }
-
-  // Upload the new PDF
-  const fileName = `menu-${Date.now()}.pdf`;
-  const response = await drive.files.create({
-    requestBody: {
-      name: fileName,
-      parents: [menuFolderId],
-    },
-    media: {
-      mimeType: "application/pdf",
-      body: new Readable({
-        read() {
-          this.push(pdfBuffer);
-          this.push(null);
-        },
-      }),
-    },
-    fields: "id, webViewLink",
-  });
-
-  const fileId = response.data.id;
-
-  // Make the PDF publicly viewable
-  if (fileId) {
-    await drive.permissions.create({
-      fileId,
-      requestBody: {
-        role: "reader",
-        type: "anyone",
-      },
-    });
-  }
-
-  const pdfUrl = `https://drive.google.com/file/d/${fileId}/view`;
+  // Upload PDF with versioning (keeps last 3, uses menu/pdfs/ subfolder)
+  const pdfUrl = await uploadPdfVersioned(
+    token.accessToken as string,
+    mapping.businessId,
+    pdfBuffer
+  );
 
   return NextResponse.json({ pdfUrl });
-}
-
-function extractFileId(url: string): string | null {
-  if (!url) return null;
-  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-  return match ? match[1] : null;
 }

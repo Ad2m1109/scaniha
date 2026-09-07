@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/../auth";
-import { getOwnerMapping } from "@/lib/server/db";
+import { getOwnerMappingByBusinessId } from "@/lib/server/db";
 import { Providers } from "@/components/Providers";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { AppDataProvider } from "@/context/AppDataContext";
@@ -16,7 +16,7 @@ export default async function DashboardLayout({
     redirect("/auth/login");
   }
 
-  const mapping = getOwnerMapping(session.user.businessId);
+  const mapping = await getOwnerMappingByBusinessId(session.user.businessId);
   if (mapping && !mapping.onboardingComplete) {
     redirect("/auth/onboarding");
   }

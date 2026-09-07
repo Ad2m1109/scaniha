@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 interface ImageUploadProps {
   value: string;
   onChange: (url: string) => void;
-  folder: "products" | "rewards" | "profile" | "menu";
+  folder: "products" | "rewards" | "profile" | "menu" | "customers";
   className?: string;
   label?: string;
 }

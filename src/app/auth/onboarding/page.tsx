@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/../auth";
-import { getOwnerMapping } from "@/lib/server/db";
+import { getOwnerMappingByBusinessId } from "@/lib/server/db";
 import { OnboardingWizard } from "@/components/auth/OnboardingWizard";
 
 export default async function OnboardingPage() {
@@ -10,7 +10,7 @@ export default async function OnboardingPage() {
     redirect("/auth/login");
   }
 
-  const mapping = getOwnerMapping(session.user.businessId);
+  const mapping = await getOwnerMappingByBusinessId(session.user.businessId);
   if (mapping?.onboardingComplete) {
     redirect("/dashboard");
   }

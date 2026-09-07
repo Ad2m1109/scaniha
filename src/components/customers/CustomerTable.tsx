@@ -51,7 +51,11 @@ export function CustomerTable({ customers }: CustomerTableProps) {
                 <TableCell className="px-5 py-4">
                   <div className="flex items-center gap-3">
                     <Avatar size="default" className="h-9 w-9 bg-purple-soft text-purple">
-                      <AvatarFallback className="bg-transparent text-[10px] font-bold text-purple">{initials(customer.name)}</AvatarFallback>
+                      {customer.image ? (
+                        <img src={customer.image} alt={customer.name} className="h-full w-full rounded-full object-cover" />
+                      ) : (
+                        <AvatarFallback className="bg-transparent text-[10px] font-bold text-purple">{initials(customer.name)}</AvatarFallback>
+                      )}
                     </Avatar>
                     <div className="min-w-0">
                       <Link href={`/dashboard/customers/${customer.id}`} className="truncate text-sm font-bold text-ink hover:text-purple">{customer.name}</Link>

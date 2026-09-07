@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/../auth";
-import { getOwnerMapping, saveOwnerMapping } from "@/lib/server/db";
+import { getOwnerMappingByBusinessId, saveOwnerMapping } from "@/lib/server/db";
 import { writeSnapshot } from "@/lib/server/snapshots";
 
 interface OnboardingInput {
@@ -26,12 +26,11 @@ export async function completeOnboarding(data: OnboardingInput) {
     redirect("/auth/login");
   }
 
-  const sub = session.user.businessId;
-  const mapping = getOwnerMapping(sub);
+  const mapping = await getOwnerMappingByBusinessId(session.user.businessId);
 
   if (mapping) {
     mapping.onboardingComplete = true;
-    saveOwnerMapping(mapping);
+    await saveOwnerMapping(mapping);
   }
 
   const business = {

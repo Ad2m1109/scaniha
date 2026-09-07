@@ -86,6 +86,7 @@ const BUSINESS_HEADERS = [
   "id", "name", "ownerName", "logo", "phone", "address", "description",
   "facebook", "instagram", "whatsapp",
   "template", "currency", "heroImage", "tagline", "menuPdfUrl",
+  "businessTagline",
 ];
 
 const CATEGORY_HEADERS = ["id", "name", "description", "sortOrder"];
@@ -96,7 +97,7 @@ const PRODUCT_HEADERS = [
 ];
 
 const CUSTOMER_HEADERS = [
-  "id", "name", "email", "phone", "points", "visits",
+  "id", "name", "email", "phone", "image", "points", "visits",
   "tier", "lastVisit", "joinedAt", "qrCode",
 ];
 
@@ -131,6 +132,7 @@ function businessToRow(b: BusinessProfile, s: MenuSettings): string[] {
     s.heroImage ?? "",
     s.tagline ?? "",
     b.menuPdfUrl ?? "",
+    b.tagline ?? "",
   ];
 }
 
@@ -147,7 +149,7 @@ function productToRow(p: Product): string[] {
 
 function customerToRow(c: Customer): string[] {
   return [
-    c.id, c.name, c.email, c.phone, String(c.points), String(c.visits),
+    c.id, c.name, c.email, c.phone, c.image ?? "", String(c.points), String(c.visits),
     c.tier, c.lastVisit, c.joinedAt, c.qrCode,
   ];
 }
@@ -189,6 +191,7 @@ function rowToBusiness(row: string[]): Partial<BusinessProfile> {
     instagram:   row[8],
     whatsapp:    row[9],
     menuPdfUrl:  row[14] || "",
+    tagline:     row[15] || "",
   };
 }
 
@@ -229,12 +232,13 @@ function rowToCustomer(row: string[]): Customer {
     name:      row[1],
     email:     row[2],
     phone:     row[3],
-    points:    parseInt(row[4] || "0", 10),
-    visits:    parseInt(row[5] || "0", 10),
-    tier:      (row[6] as Customer["tier"]) || "Bronze",
-    lastVisit: row[7] || "Never",
-    joinedAt:  row[8] || new Date().toISOString().slice(0, 10),
-    qrCode:    row[9] || "",
+    image:     row[4] || "",
+    points:    parseInt(row[5] || "0", 10),
+    visits:    parseInt(row[6] || "0", 10),
+    tier:      (row[7] as Customer["tier"]) || "Bronze",
+    lastVisit: row[8] || "Never",
+    joinedAt:  row[9] || new Date().toISOString().slice(0, 10),
+    qrCode:    row[10] || "",
   };
 }
 

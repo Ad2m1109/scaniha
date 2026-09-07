@@ -46,6 +46,7 @@ export interface Customer {
   name: string;
   email: string;
   phone: string;
+  image: string;
   points: number;
   visits: number;
   tier: CustomerTier;

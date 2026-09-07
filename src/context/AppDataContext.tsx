@@ -5,6 +5,7 @@ import { Toaster, toast } from "sonner";
 
 import { seedState } from "@/lib/data/seed";
 import { loadAppState, saveAppState } from "@/lib/storage";
+import { generateId, customerTier } from "@/lib/utils";
 import type {
   AppState,
   BusinessProfile,
@@ -16,7 +17,7 @@ import type {
   Reward,
 } from "@/types";
 
-type NewCustomer = Pick<Customer, "name" | "email" | "phone">;
+type NewCustomer = Pick<Customer, "name" | "email" | "phone" | "image">;
 type Result = { ok: boolean; message: string };
 
 interface AppDataContextValue extends AppState {
@@ -42,17 +43,12 @@ interface AppDataContextValue extends AppState {
 
 const AppDataContext = createContext<AppDataContextValue | null>(null);
 
-function id(prefix: string) {
-  const suffix = typeof crypto !== "undefined" && "randomUUID" in crypto
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-  return `${prefix}-${suffix}`;
-}
-
-function customerTier(points: number): Customer["tier"] {
-  if (points >= 1000) return "Gold";
-  if (points >= 500) return "Silver";
-  return "Bronze";
+function archiveImageLocal(imageUrl: string, businessId: string, category: string) {
+  fetch("/api/archive", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ imageUrl, category }),
+  }).catch(() => {});
 }
 
 export function AppDataProvider({ children }: { children: React.ReactNode }) {
@@ -62,29 +58,39 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   // ── Load from remote on mount ──────────────────────────────────────────────
   useEffect(() => {
     async function init() {
+      // First, try loading from legacy localStorage (fast initial render)
       const localState = loadAppState();
       try {
         const res = await fetch("/api/data");
         if (res.ok) {
           const remoteData = await res.json();
           const serverBusinessId: string | undefined = remoteData.businessId;
-          if (!remoteData.notFound) {
+          if (!remoteData.notFound && serverBusinessId) {
+            // Check if localStorage has stale data from a different business
+            const namespacedKey = `scaniha.${serverBusinessId}`;
+            const namespaced = window.localStorage.getItem(namespacedKey);
+            const cache = namespaced
+              ? JSON.parse(namespaced) as Partial<AppState>
+              : null;
+
+            // Use namespaced cache if available, otherwise use legacy + server data
+            const base = cache ?? localState;
             setState({
-              ...localState,
+              ...base,
               business: {
-                ...localState.business,
+                ...base.business,
                 ...remoteData.business,
-                ...(serverBusinessId ? { id: serverBusinessId } : {}),
+                id: serverBusinessId,
               },
-              menuSettings: { ...localState.menuSettings, ...remoteData.settings },
-              categories: remoteData.categories ?? localState.categories,
-              products: remoteData.products ?? localState.products,
-              customers: remoteData.customers ?? localState.customers,
-              rewards: remoteData.rewards ?? localState.rewards,
-              loyalty: remoteData.loyalty ?? localState.loyalty,
-              visits: remoteData.visits ?? localState.visits,
-              redemptions: remoteData.redemptions ?? localState.redemptions,
-              menuViews: remoteData.menuViews ?? localState.menuViews,
+              menuSettings: { ...base.menuSettings, ...remoteData.settings },
+              categories: remoteData.categories ?? base.categories,
+              products: remoteData.products ?? base.products,
+              customers: remoteData.customers ?? base.customers,
+              rewards: remoteData.rewards ?? base.rewards,
+              loyalty: remoteData.loyalty ?? base.loyalty,
+              visits: remoteData.visits ?? base.visits,
+              redemptions: remoteData.redemptions ?? base.redemptions,
+              menuViews: remoteData.menuViews ?? base.menuViews,
             });
             setReady(true);
             return;
@@ -110,7 +116,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   // ── Auto-save to localStorage + remote ─────────────────────────────────────
   useEffect(() => {
     if (!ready) return;
-    saveAppState(state);
+    saveAppState(state, state.business.id);
 
     const timer = setTimeout(() => {
       fetch("/api/data", {
@@ -157,7 +163,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   const addCategory = useCallback((input: Omit<Category, "id" | "sortOrder">) => {
     setState((current) => ({
       ...current,
-      categories: [...current.categories, { ...input, id: id("category"), sortOrder: current.categories.length + 1 }],
+      categories: [...current.categories, { ...input, id: generateId("category"), sortOrder: current.categories.length + 1 }],
     }));
     toast.success("Category created");
   }, []);
@@ -168,11 +174,20 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const deleteCategory = useCallback((categoryId: string) => {
-    setState((current) => ({
-      ...current,
-      categories: current.categories.filter((item) => item.id !== categoryId),
-      products: current.products.filter((item) => item.categoryId !== categoryId),
-    }));
+    setState((current) => {
+      // Archive images of all products in this category
+      const affected = current.products.filter((p) => p.categoryId === categoryId && p.image);
+      if (affected.length && current.business.id) {
+        for (const p of affected) {
+          archiveImageLocal(p.image, current.business.id, "products");
+        }
+      }
+      return {
+        ...current,
+        categories: current.categories.filter((item) => item.id !== categoryId),
+        products: current.products.filter((item) => item.categoryId !== categoryId),
+      };
+    });
     toast.success("Category removed");
   }, []);
 
@@ -183,13 +198,19 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
         return { ...current, products: current.products.map((item) => item.id === product.id ? { ...item, ...product, id: item.id } : item) };
       }
       const sortOrder = current.products.filter((item) => item.categoryId === product.categoryId).length + 1;
-      return { ...current, products: [...current.products, { ...product, id: id("product"), sortOrder }] };
+      return { ...current, products: [...current.products, { ...product, id: generateId("product"), sortOrder }] };
     });
     toast.success(product.id ? "Product updated" : "Product created");
   }, []);
 
   const deleteProduct = useCallback((productId: string) => {
-    setState((current) => ({ ...current, products: current.products.filter((item) => item.id !== productId) }));
+    setState((current) => {
+      const product = current.products.find((p) => p.id === productId);
+      if (product?.image && current.business.id) {
+        archiveImageLocal(product.image, current.business.id, "products");
+      }
+      return { ...current, products: current.products.filter((item) => item.id !== productId) };
+    });
     toast.success("Product removed");
   }, []);
 
@@ -200,7 +221,18 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
       const target = index + direction;
       if (index < 0 || target < 0 || target >= ordered.length || ordered[index].categoryId !== ordered[target].categoryId) return current;
       [ordered[index], ordered[target]] = [ordered[target], ordered[index]];
-      return { ...current, products: ordered.map((item, itemIndex) => ({ ...item, sortOrder: itemIndex + 1 })) };
+      // Only renumber products within the same category
+      const categoryId = ordered[index].categoryId;
+      let categoryCounter = 1;
+      return {
+        ...current,
+        products: ordered.map((item) => {
+          if (item.categoryId === categoryId) {
+            return { ...item, sortOrder: categoryCounter++ };
+          }
+          return item;
+        }),
+      };
     });
   }, []);
 
@@ -208,7 +240,8 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   const addCustomer = useCallback((input: NewCustomer) => {
     const customer: Customer = {
       ...input,
-      id: id("customer"),
+      id: generateId("customer"),
+      image: input.image ?? "",
       points: state.loyalty.enabled ? state.loyalty.welcomeBonus : 0,
       visits: 0,
       tier: "Bronze",
@@ -227,6 +260,11 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const deleteCustomer = useCallback((customerId: string) => {
+    // Archive the customer's profile image on Drive before removing
+    const customer = state.customers.find((c) => c.id === customerId);
+    if (customer?.image && state.business.id) {
+      fetch(`/api/customers?id=${customerId}`, { method: "DELETE" }).catch(() => {});
+    }
     setState((current) => ({
       ...current,
       customers: current.customers.filter((item) => item.id !== customerId),
@@ -234,24 +272,36 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
       redemptions: current.redemptions.filter((item) => item.customerId !== customerId),
     }));
     toast.success("Customer removed");
-  }, []);
+  }, [state.customers, state.business.id]);
 
   // ── Reward CRUD ────────────────────────────────────────────────────────────
   const saveReward = useCallback((reward: Omit<Reward, "id" | "redemptions"> & { id?: string }) => {
     setState((current) => reward.id
       ? { ...current, rewards: current.rewards.map((item) => item.id === reward.id ? { ...item, ...reward, id: item.id } : item) }
-      : { ...current, rewards: [...current.rewards, { ...reward, id: id("reward"), redemptions: 0 }] });
+      : { ...current, rewards: [...current.rewards, { ...reward, id: generateId("reward"), redemptions: 0 }] });
     toast.success(reward.id ? "Reward updated" : "Reward created");
   }, []);
 
   const deleteReward = useCallback((rewardId: string) => {
-    setState((current) => ({ ...current, rewards: current.rewards.filter((item) => item.id !== rewardId) }));
+    setState((current) => {
+      const reward = current.rewards.find((r) => r.id === rewardId);
+      if (reward?.image && current.business.id) {
+        archiveImageLocal(reward.image, current.business.id, "rewards");
+      }
+      return { ...current, rewards: current.rewards.filter((item) => item.id !== rewardId) };
+    });
     toast.success("Reward removed");
   }, []);
 
   // ── Business / Loyalty / Settings ──────────────────────────────────────────
   const updateBusiness = useCallback((business: BusinessProfile) => {
-    setState((current) => ({ ...current, business }));
+    setState((current) => {
+      // Archive old logo if it changed
+      if (current.business.logo && current.business.logo !== business.logo && business.id) {
+        archiveImageLocal(current.business.logo, business.id, "profile");
+      }
+      return { ...current, business };
+    });
     toast.success("Business profile saved");
   }, []);
 
@@ -267,47 +317,62 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
 
   // ── Activity recording ─────────────────────────────────────────────────────
   const recordVisit = useCallback((customerId: string): Result => {
-    const customer = state.customers.find((item) => item.id === customerId);
-    if (!customer) { toast.error("Customer not found"); return { ok: false, message: "Customer not found" }; }
+    // Validation reads from state (acceptable — stale read just means "not found")
     if (!state.loyalty.enabled) { toast.error("Loyalty is currently disabled"); return { ok: false, message: "Loyalty is currently disabled" }; }
     const points = state.loyalty.pointsPerVisit;
-    const nextPoints = customer.points + points;
-    setState((current) => ({
-      ...current,
-      customers: current.customers.map((item) => item.id === customerId ? {
-        ...item,
-        points: nextPoints,
-        visits: item.visits + 1,
-        tier: customerTier(nextPoints),
-        lastVisit: new Date().toLocaleString(),
-      } : item),
-      visits: [{ id: id("visit"), customerId, pointsEarned: points, createdAt: new Date().toISOString() }, ...current.visits],
-    }));
-    toast.success(`Visit recorded · +${points} points`);
-    return { ok: true, message: `${points} points added` };
-  }, [state.customers, state.loyalty]);
+
+    let result: Result = { ok: false, message: "Customer not found" };
+    setState((current) => {
+      const customer = current.customers.find((item) => item.id === customerId);
+      if (!customer) { toast.error("Customer not found"); return current; }
+      const nextPoints = customer.points + points;
+      result = { ok: true, message: `${points} points added` };
+      return {
+        ...current,
+        customers: current.customers.map((item) => item.id === customerId ? {
+          ...item,
+          points: nextPoints,
+          visits: item.visits + 1,
+          tier: customerTier(nextPoints),
+          lastVisit: new Date().toLocaleString(),
+        } : item),
+        visits: [{ id: generateId("visit"), customerId, pointsEarned: points, createdAt: new Date().toISOString() }, ...current.visits],
+      };
+    });
+    if (result.ok) toast.success(`Visit recorded · +${points} points`);
+    return result;
+  }, [state.loyalty]);
 
   const redeemReward = useCallback((customerId: string, rewardId: string): Result => {
+    // Validation reads from state
     const customer = state.customers.find((item) => item.id === customerId);
     const reward = state.rewards.find((item) => item.id === rewardId);
     if (!customer || !reward) { toast.error("Customer or reward not found"); return { ok: false, message: "Customer or reward not found" }; }
     if (reward.status !== "active") { toast.error("This reward is paused"); return { ok: false, message: "This reward is paused" }; }
     if (customer.points < reward.pointsRequired) { const message = `Needs ${reward.pointsRequired - customer.points} more points`; toast.error(message); return { ok: false, message }; }
-    const nextPoints = customer.points - reward.pointsRequired;
-    setState((current) => ({
-      ...current,
-      customers: current.customers.map((item) => item.id === customerId ? { ...item, points: nextPoints, tier: customerTier(nextPoints) } : item),
-      rewards: current.rewards.map((item) => item.id === rewardId ? { ...item, redemptions: item.redemptions + 1 } : item),
-      redemptions: [{ id: id("redemption"), customerId, rewardId, pointsSpent: reward.pointsRequired, createdAt: new Date().toISOString() }, ...current.redemptions],
-    }));
-    toast.success(`${reward.name} redeemed`);
-    return { ok: true, message: `${reward.pointsRequired} points redeemed` };
+    const pointsRequired = reward.pointsRequired;
+
+    let result: Result = { ok: false, message: "Redemption failed" };
+    setState((current) => {
+      const c = current.customers.find((item) => item.id === customerId);
+      if (!c) { return current; }
+      const nextPoints = c.points - pointsRequired;
+      result = { ok: true, message: `${pointsRequired} points redeemed` };
+      return {
+        ...current,
+        customers: current.customers.map((item) => item.id === customerId ? { ...item, points: nextPoints, tier: customerTier(nextPoints) } : item),
+        rewards: current.rewards.map((item) => item.id === rewardId ? { ...item, redemptions: item.redemptions + 1 } : item),
+        redemptions: [{ id: generateId("redemption"), customerId, rewardId, pointsSpent: pointsRequired, createdAt: new Date().toISOString() }, ...current.redemptions],
+      };
+    });
+    if (result.ok) toast.success(`${reward.name} redeemed`);
+    return result;
   }, [state.customers, state.rewards]);
 
   const trackMenuView = useCallback((source: "menu" | "qr" = "menu") => {
     setState((current) => ({
       ...current,
-      menuViews: [{ id: id("view"), source, createdAt: new Date().toISOString() }, ...current.menuViews],
+      menuViews: [{ id: generateId("view"), source, createdAt: new Date().toISOString() }, ...current.menuViews],
     }));
   }, []);
 

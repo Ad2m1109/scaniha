@@ -7,6 +7,7 @@ import {
   saveToGoogleSheets,
   ensureSheetsExist,
 } from "@/lib/google/sheets";
+import { ensureBusinessFolder, moveFileToFolder } from "@/lib/google/drive";
 import { writeSnapshot, readSnapshot } from "@/lib/server/snapshots";
 
 // ─── GET /api/data ────────────────────────────────────────────────────────────
@@ -17,7 +18,7 @@ export async function GET(req: NextRequest) {
   }
 
   const sub = token.googleSub as string;
-  const mapping = getOwnerMapping(sub);
+  const mapping = await getOwnerMapping(sub);
   const businessId = mapping?.businessId ?? (token.businessId as string);
 
   // Try Google Sheets first
@@ -45,12 +46,12 @@ export async function GET(req: NextRequest) {
         settings: snapshot.style,
         categories: snapshot.categories,
         products: snapshot.products,
-        customers: [],
-        rewards: [],
-        loyalty: { enabled: true, pointsPerVisit: 50, welcomeBonus: 100 },
-        visits: [],
-        redemptions: [],
-        menuViews: [],
+        customers: null,
+        rewards: null,
+        loyalty: null,
+        visits: null,
+        redemptions: null,
+        menuViews: null,
         businessId,
       });
     }
@@ -81,7 +82,7 @@ export async function POST(req: NextRequest) {
   } = body;
 
   const sub = token.googleSub as string;
-  let mapping = getOwnerMapping(sub);
+  let mapping = await getOwnerMapping(sub);
 
   if (!mapping) {
     mapping = { sub, businessId: token.businessId as string };
@@ -96,7 +97,23 @@ export async function POST(req: NextRequest) {
       business.name || "My Business"
     );
     mapping.spreadsheetId = spreadsheetId;
-    saveOwnerMapping(mapping);
+    await saveOwnerMapping(mapping);
+
+    // Move spreadsheet into scaniha_data/{businessId}/ folder
+    try {
+      const bizFolderId = await ensureBusinessFolder(
+        token.accessToken as string,
+        mapping.businessId
+      );
+      await moveFileToFolder(
+        token.accessToken as string,
+        spreadsheetId,
+        bizFolderId
+      );
+    } catch (e) {
+      console.error("Failed to move spreadsheet to scaniha_data folder:", e);
+      // Non-fatal — spreadsheet works from root too
+    }
   }
 
   // Ensure all sheets exist before writing

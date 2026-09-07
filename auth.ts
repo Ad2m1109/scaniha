@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import { getOwnerMapping, saveOwnerMapping } from "@/lib/server/db";
+import { initializeDrive } from "@/lib/google/drive";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -38,16 +39,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         // Generate or retrieve a stable, opaque businessId.
         const sub = profile.sub as string;
-        let mapping = getOwnerMapping(sub);
+        let mapping = await getOwnerMapping(sub);
         if (!mapping) {
           mapping = {
             sub,
             businessId: crypto.randomUUID(),
           };
-          saveOwnerMapping(mapping);
+          await saveOwnerMapping(mapping);
         }
         token.businessId = mapping.businessId;
         token.onboardingComplete = mapping.onboardingComplete ?? false;
+
+        // Initialize Drive folder structure on first login
+        if (!mapping.driveInitialized && account.access_token) {
+          try {
+            await initializeDrive(account.access_token, mapping.businessId);
+            mapping.driveInitialized = true;
+            await saveOwnerMapping(mapping);
+          } catch (e) {
+            console.error("Failed to initialize Drive folders:", e);
+            // Non-fatal — folders will be created on demand when uploading files
+          }
+        }
       }
 
       // Refresh access_token if it has expired
@@ -74,7 +87,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               Date.now() + (tokens.expires_in ?? 3600) * 1000;
           }
         } catch {
-          // Token refresh failed — user will need to sign in again
+          // Token refresh failed — clear tokens to force re-authentication
+          delete token.accessToken;
+          delete token.refreshToken;
+          delete token.accessTokenExpiresAt;
           token.error = "RefreshTokenError";
         }
       }
