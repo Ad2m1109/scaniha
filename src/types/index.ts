@@ -93,12 +93,36 @@ export interface MenuViewRecord {
 }
 
 export type MenuTemplateId = "noir" | "lavender" | "sunset" | "botanical" | "mono";
+export type MenuLayout = "grid" | "list" | "compact";
+export type MenuHeaderStyle = "centered" | "split" | "cover";
+export type MenuCardStyle = "elevated" | "outline" | "minimal";
+export type MenuFontFamily = "modern" | "classic" | "rounded";
+export type MenuBorderRadius = "none" | "soft" | "rounded";
+export type MenuCategoryStyle = "plain" | "underline" | "filled";
+
+export interface MenuColors {
+  background: string;
+  surface: string;
+  text: string;
+  muted: string;
+  accent: string;
+}
 
 export interface MenuSettings {
   template: MenuTemplateId;
   currency: string;
   heroImage: string;
   tagline: string;
+  layout: MenuLayout;
+  headerStyle: MenuHeaderStyle;
+  cardStyle: MenuCardStyle;
+  fontFamily: MenuFontFamily;
+  borderRadius: MenuBorderRadius;
+  categoryStyle: MenuCategoryStyle;
+  colors: MenuColors;
+  showImages: boolean;
+  showDescriptions: boolean;
+  showContactInfo: boolean;
 }
 
 export interface MetricPoint extends ActivityPoint {

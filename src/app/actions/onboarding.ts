@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/../auth";
 import { getOwnerMappingByBusinessId, saveOwnerMapping } from "@/lib/server/db";
 import { writeSnapshot } from "@/lib/server/snapshots";
+import { menuDesignPresets } from "@/lib/menu-settings";
 
 interface OnboardingInput {
   businessName: string;
@@ -54,9 +55,7 @@ export async function completeOnboarding(data: OnboardingInput) {
   };
 
   const settings = {
-    template: "lavender" as const,
-    currency: "DA",
-    heroImage: "",
+    ...menuDesignPresets.lavender,
     tagline: data.tagline,
   };
 

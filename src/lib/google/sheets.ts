@@ -11,6 +11,7 @@ import type {
   RedemptionRecord,
   MenuViewRecord,
 } from "@/types";
+import { normalizeMenuSettings } from "@/lib/menu-settings";
 
 export function getSheetsClient(accessToken: string) {
   const oauth2Client = new google.auth.OAuth2();
@@ -87,6 +88,7 @@ const BUSINESS_HEADERS = [
   "facebook", "instagram", "whatsapp",
   "template", "currency", "heroImage", "tagline", "menuPdfUrl",
   "businessTagline",
+  "menuCustomization",
 ];
 
 const CATEGORY_HEADERS = ["id", "name", "description", "sortOrder"];
@@ -133,6 +135,7 @@ function businessToRow(b: BusinessProfile, s: MenuSettings): string[] {
     s.tagline ?? "",
     b.menuPdfUrl ?? "",
     b.tagline ?? "",
+    JSON.stringify(s),
   ];
 }
 
@@ -196,12 +199,17 @@ function rowToBusiness(row: string[]): Partial<BusinessProfile> {
 }
 
 function rowToSettings(row: string[]): Partial<MenuSettings> {
-  return {
+  const legacy: Partial<MenuSettings> = {
     template:   (row[10] as MenuSettings["template"]) || undefined,
     currency:   row[11] || "DA",
     heroImage:  row[12] || "",
     tagline:    row[13] || "",
   };
+  try {
+    return normalizeMenuSettings(row[16] ? JSON.parse(row[16]) as Partial<MenuSettings> : legacy);
+  } catch {
+    return normalizeMenuSettings(legacy);
+  }
 }
 
 function rowToCategory(row: string[]): Category {

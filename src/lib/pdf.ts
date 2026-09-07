@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import type { BusinessProfile, Category, Product, MenuSettings } from "@/types";
+import { normalizeMenuSettings } from "@/lib/menu-settings";
 
 /**
  * Generate a styled PDF menu from menu data.
@@ -11,6 +12,7 @@ export function generateMenuPdf(
   products: Product[],
   settings: MenuSettings
 ): Buffer {
+  settings = normalizeMenuSettings(settings);
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const pageWidth = doc.internal.pageSize.getWidth();
   const margin = 20;
@@ -18,20 +20,21 @@ export function generateMenuPdf(
   let y = margin;
 
   // Colors based on template
-  const colors = getTemplateColors(settings.template);
+  const colors = getMenuColors(settings);
+  const pdfFont = settings.fontFamily === "classic" ? "times" : settings.fontFamily === "rounded" ? "helvetica" : "helvetica";
 
   // ── Header ──────────────────────────────────────────────────────────────
   doc.setFillColor(colors.bg.r, colors.bg.g, colors.bg.b);
   doc.rect(0, 0, pageWidth, 60, "F");
 
   // Business name
-  doc.setFont("helvetica", "bold");
+  doc.setFont(pdfFont, "bold");
   doc.setFontSize(28);
   doc.setTextColor(colors.accent.r, colors.accent.g, colors.accent.b);
   doc.text(business.name, pageWidth / 2, 30, { align: "center" });
 
   // Tagline or description
-  doc.setFont("helvetica", "normal");
+  doc.setFont(pdfFont, "normal");
   doc.setFontSize(11);
   doc.setTextColor(colors.muted.r, colors.muted.g, colors.muted.b);
   const tagline = settings.tagline || business.description || "";
@@ -65,63 +68,78 @@ export function generateMenuPdf(
     }
 
     // Category header
-    doc.setFillColor(colors.accent.r, colors.accent.g, colors.accent.b);
-    doc.roundedRect(margin, y, contentWidth, 10, 2, 2, "F");
-    doc.setFont("helvetica", "bold");
+    if (settings.categoryStyle === "filled") {
+      doc.setFillColor(colors.accent.r, colors.accent.g, colors.accent.b);
+      const radius = settings.borderRadius === "none" ? 0 : settings.borderRadius === "soft" ? 1 : 2;
+      doc.roundedRect(margin, y, contentWidth, 10, radius, radius, "F");
+    } else if (settings.categoryStyle === "underline") {
+      doc.setDrawColor(colors.accent.r, colors.accent.g, colors.accent.b);
+      doc.setLineWidth(0.8);
+      doc.line(margin, y + 9, pageWidth - margin, y + 9);
+    }
+    doc.setFont(pdfFont, "bold");
     doc.setFontSize(12);
-    doc.setTextColor(255, 255, 255);
+    if (settings.categoryStyle === "filled") doc.setTextColor(255, 255, 255);
+    else doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
     doc.text(category.name, margin + 5, y + 7);
 
     y += 16;
 
     // Category description
-    if (category.description) {
-      doc.setFont("helvetica", "italic");
+    if (settings.showDescriptions && category.description) {
+      doc.setFont(pdfFont, "italic");
       doc.setFontSize(9);
       doc.setTextColor(colors.muted.r, colors.muted.g, colors.muted.b);
       doc.text(category.description, margin, y);
       y += 6;
     }
 
-    // Products
-    for (const product of items) {
-      // Check if we need a new page
-      if (y > 270) {
+    // Products. Grid uses two print columns; list and compact use the full width.
+    const columns = settings.layout === "grid" ? 2 : 1;
+    const columnGap = columns === 2 ? 8 : 0;
+    const itemWidth = (contentWidth - columnGap) / columns;
+    for (let index = 0; index < items.length; index += columns) {
+      const row = items.slice(index, index + columns);
+      const measured = row.map((product) => {
+        const descriptionLines = settings.showDescriptions && product.description
+          ? doc.splitTextToSize(product.description, itemWidth - 8) as string[]
+          : [];
+        return { product, descriptionLines, height: 7 + descriptionLines.length * 4 + (settings.layout === "compact" ? 3 : 7) };
+      });
+      const rowHeight = Math.max(...measured.map((item) => item.height));
+      if (y + rowHeight > 275) {
         doc.addPage();
         y = margin;
       }
 
-      // Product name
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
-      doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
-      doc.text(product.name, margin, y);
+      measured.forEach(({ product, descriptionLines }, column) => {
+        const x = margin + column * (itemWidth + columnGap);
+        const right = x + itemWidth;
+        if (settings.cardStyle === "elevated") {
+          doc.setFillColor(colors.line.r, colors.line.g, colors.line.b);
+          const radius = settings.borderRadius === "none" ? 0 : settings.borderRadius === "soft" ? 1 : 2;
+          doc.roundedRect(x - 2, y - 5, itemWidth + 4, rowHeight, radius, radius, "F");
+        }
+        doc.setFont(pdfFont, "bold");
+        doc.setFontSize(settings.layout === "compact" ? 10 : 11);
+        doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+        doc.text(product.name, x, y, { maxWidth: itemWidth * 0.62 });
+        doc.setTextColor(colors.accent.r, colors.accent.g, colors.accent.b);
+        doc.text(`${settings.currency} ${product.price.toFixed(2)}`, right, y, { align: "right" });
 
-      // Price (right-aligned)
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
-      doc.setTextColor(colors.accent.r, colors.accent.g, colors.accent.b);
-      const priceText = `${settings.currency} ${product.price.toFixed(2)}`;
-      doc.text(priceText, pageWidth - margin, y, { align: "right" });
-
-      y += 5;
-
-      // Description
-      if (product.description) {
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(9);
-        doc.setTextColor(colors.muted.r, colors.muted.g, colors.muted.b);
-        const lines = doc.splitTextToSize(product.description, contentWidth - 10);
-        doc.text(lines, margin, y);
-        y += lines.length * 4;
-      }
-
-      // Separator line
-      y += 2;
-      doc.setDrawColor(colors.line.r, colors.line.g, colors.line.b);
-      doc.setLineWidth(0.3);
-      doc.line(margin, y, pageWidth - margin, y);
-      y += 6;
+        if (descriptionLines.length) {
+          doc.setFont(pdfFont, "normal");
+          doc.setFontSize(9);
+          doc.setTextColor(colors.muted.r, colors.muted.g, colors.muted.b);
+          doc.text(descriptionLines, x, y + 5);
+        }
+        if (settings.cardStyle === "outline") {
+          doc.setDrawColor(colors.line.r, colors.line.g, colors.line.b);
+          doc.setLineWidth(0.5);
+          doc.line(x, y + rowHeight - 5, right, y + rowHeight - 5);
+        }
+      });
+      y += rowHeight;
     }
 
     y += 4;
@@ -131,7 +149,7 @@ export function generateMenuPdf(
   const totalPages = doc.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
-    doc.setFont("helvetica", "normal");
+    doc.setFont(pdfFont, "normal");
     doc.setFontSize(8);
     doc.setTextColor(colors.muted.r, colors.muted.g, colors.muted.b);
     doc.text(
@@ -147,7 +165,7 @@ export function generateMenuPdf(
   return Buffer.from(pdfOutput);
 }
 
-function getTemplateColors(template: string) {
+function getMenuColors(settings: MenuSettings) {
   const presets: Record<string, { bg: RGB; accent: RGB; text: RGB; muted: RGB; line: RGB }> = {
     lavender: {
       bg: { r: 246, g: 248, b: 252 },
@@ -186,7 +204,19 @@ function getTemplateColors(template: string) {
     },
   };
 
-  return presets[template] ?? presets.lavender;
+  const preset = presets[settings.template] ?? presets.lavender;
+  return {
+    bg: hexToRgb(settings.colors.background) ?? preset.bg,
+    accent: hexToRgb(settings.colors.accent) ?? preset.accent,
+    text: hexToRgb(settings.colors.text) ?? preset.text,
+    muted: hexToRgb(settings.colors.muted) ?? preset.muted,
+    line: hexToRgb(settings.colors.surface) ?? preset.line,
+  };
+}
+
+function hexToRgb(value: string): RGB | null {
+  const match = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(value);
+  return match ? { r: parseInt(match[1], 16), g: parseInt(match[2], 16), b: parseInt(match[3], 16) } : null;
 }
 
 interface RGB {

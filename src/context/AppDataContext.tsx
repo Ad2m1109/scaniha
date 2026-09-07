@@ -6,6 +6,7 @@ import { Toaster, toast } from "sonner";
 import { seedState } from "@/lib/data/seed";
 import { loadAppState, saveAppState } from "@/lib/storage";
 import { generateId, customerTier } from "@/lib/utils";
+import { normalizeMenuSettings } from "@/lib/menu-settings";
 import type {
   AppState,
   BusinessProfile,
@@ -82,7 +83,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
                 ...remoteData.business,
                 id: serverBusinessId,
               },
-              menuSettings: { ...base.menuSettings, ...remoteData.settings },
+              menuSettings: normalizeMenuSettings({ ...base.menuSettings, ...remoteData.settings }),
               categories: remoteData.categories ?? base.categories,
               products: remoteData.products ?? base.products,
               customers: remoteData.customers ?? base.customers,

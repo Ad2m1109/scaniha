@@ -3,6 +3,7 @@ import { customers } from "@/lib/data/customers";
 import { categories, products } from "@/lib/data/menu";
 import { rewards } from "@/lib/data/rewards";
 import type { AppState } from "@/types";
+import { menuDesignPresets } from "@/lib/menu-settings";
 
 export const seedState: AppState = {
   business,
@@ -11,12 +12,7 @@ export const seedState: AppState = {
   customers,
   rewards,
   loyalty: { enabled: true, pointsPerVisit: 50, welcomeBonus: 100 },
-  menuSettings: {
-    template: "lavender",
-    currency: "DA",
-    heroImage: "",
-    tagline: "",
-  },
+  menuSettings: menuDesignPresets.lavender,
   visits: [],
   redemptions: [],
   menuViews: [],

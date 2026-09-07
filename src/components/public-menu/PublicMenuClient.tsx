@@ -3,6 +3,7 @@
 import type { PublicSnapshot } from "@/lib/server/snapshots";
 import { MenuPreview } from "@/components/menu/MenuPreview";
 import type { BusinessProfile, MenuSettings } from "@/types";
+import { normalizeMenuSettings } from "@/lib/menu-settings";
 
 interface Props {
   businessId: string;
@@ -33,12 +34,7 @@ function snapshotToBusiness(s: PublicSnapshot): BusinessProfile {
 }
 
 function snapshotToSettings(s: PublicSnapshot): MenuSettings {
-  return {
-    template: (s.style.template as MenuSettings["template"]) || "lavender",
-    currency:  s.style.currency  || "DA",
-    heroImage: s.style.heroImage || "",
-    tagline:   s.style.tagline   || "",
-  };
+  return normalizeMenuSettings(s.style as Partial<MenuSettings>);
 }
 
 function MenuNotFound() {

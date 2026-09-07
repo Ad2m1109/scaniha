@@ -5,6 +5,7 @@ import { loadFromGoogleSheets } from "@/lib/google/sheets";
 import { generateMenuPdf } from "@/lib/pdf";
 import { uploadPdfVersioned } from "@/lib/google/drive";
 import type { MenuTemplateId } from "@/types";
+import { normalizeMenuSettings } from "@/lib/menu-settings";
 
 /**
  * POST /api/menu-pdf
@@ -57,12 +58,13 @@ export async function POST(req: NextRequest) {
     },
     data.categories,
     data.products,
-    {
+    normalizeMenuSettings({
       template: (data.settings.template as MenuTemplateId) || "lavender",
       currency: (data.settings.currency as string) || "DA",
       heroImage: (data.settings.heroImage as string) || "",
       tagline: (data.settings.tagline as string) || "",
-    }
+      ...data.settings,
+    })
   );
 
   // Upload PDF with versioning (keeps last 3, uses menu/pdfs/ subfolder)

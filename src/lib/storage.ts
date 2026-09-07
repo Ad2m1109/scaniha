@@ -1,5 +1,6 @@
 import { seedState } from "@/lib/data/seed";
 import type { AppState } from "@/types";
+import { normalizeMenuSettings } from "@/lib/menu-settings";
 
 const LEGACY_KEY = "perkly.mvp.v1";
 
@@ -27,7 +28,7 @@ export function loadAppState(businessId?: string): AppState {
       ...parsed,
       business: { ...seedState.business, ...parsed.business, menuPdfUrl: parsed.business?.menuPdfUrl ?? seedState.business.menuPdfUrl },
       loyalty: { ...seedState.loyalty, ...parsed.loyalty },
-      menuSettings: { ...seedState.menuSettings, ...parsed.menuSettings },
+      menuSettings: normalizeMenuSettings(parsed.menuSettings),
       categories: parsed.categories ?? seedState.categories,
       products: parsed.products ?? seedState.products,
       customers: parsed.customers ?? seedState.customers,

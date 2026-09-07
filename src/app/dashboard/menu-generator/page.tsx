@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Check, ExternalLink, FileDown, Loader2, Save } from "lucide-react";
+import { ArrowLeft, Check, ExternalLink, FileDown, Loader2, RotateCcw, Save } from "lucide-react";
 import { toast } from "sonner";
 import { MenuPreview, menuTemplates } from "@/components/menu/MenuPreview";
 import { ProductForm } from "@/components/menu/ProductForm";
@@ -15,6 +15,24 @@ import { Label } from "@/components/ui/label";
 import { useAppData } from "@/context/AppDataContext";
 import { cn } from "@/lib/utils";
 import type { MenuSettings } from "@/types";
+import { applyMenuPreset, menuDesignPresets } from "@/lib/menu-settings";
+
+const designOptions = {
+  layout: [["grid", "Grid"], ["list", "List"], ["compact", "Compact"]],
+  headerStyle: [["centered", "Centered"], ["split", "Split"], ["cover", "Cover"]],
+  cardStyle: [["elevated", "Elevated"], ["outline", "Outline"], ["minimal", "Minimal"]],
+  fontFamily: [["modern", "Modern"], ["classic", "Classic"], ["rounded", "Rounded"]],
+  borderRadius: [["none", "Square"], ["soft", "Soft"], ["rounded", "Rounded"]],
+  categoryStyle: [["plain", "Plain"], ["underline", "Underline"], ["filled", "Filled"]],
+} as const;
+
+function ChoiceGroup({ label, value, options, onChange }: { label: string; value: string; options: readonly (readonly [string, string])[]; onChange: (value: string) => void }) {
+  return <div className="space-y-2"><Label>{label}</Label><div className="grid grid-cols-3 gap-1 rounded-xl bg-surface-soft p-1">{options.map(([id, name]) => <button key={id} type="button" onClick={() => onChange(id)} className={cn("rounded-lg px-2 py-2 text-[11px] font-semibold transition", value === id ? "bg-surface-solid text-purple shadow-sm" : "text-muted hover:text-ink")}>{name}</button>)}</div></div>;
+}
+
+function ColorControl({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  return <label className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface-soft px-3 py-2"><span className="text-xs font-semibold text-ink">{label}</span><span className="flex items-center gap-2"><span className="font-mono text-[10px] uppercase text-muted">{value}</span><input type="color" value={value} onChange={(event) => onChange(event.target.value)} className="h-8 w-8 cursor-pointer rounded-lg border-0 bg-transparent p-0" /></span></label>;
+}
 
 function MenuGeneratorEditor() {
   const data = useAppData();
@@ -23,14 +41,21 @@ function MenuGeneratorEditor() {
   const [generatingPdf, setGeneratingPdf] = useState(false);
 
   async function save() {
+    const business = { ...data.business, name: businessName.trim() || data.business.name };
     data.updateMenuSettings(settings);
-    if (businessName.trim() && businessName !== data.business.name) {
-      data.updateBusiness({ ...data.business, name: businessName.trim() });
-    }
-
-    // Generate PDF in the background
+    if (business.name !== data.business.name) data.updateBusiness(business);
     setGeneratingPdf(true);
     try {
+      const saveResponse = await fetch("/api/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          business, menuSettings: settings, categories: data.categories, products: data.products,
+          customers: data.customers, rewards: data.rewards, loyalty: data.loyalty,
+          visits: data.visits, redemptions: data.redemptions, menuViews: data.menuViews,
+        }),
+      });
+      if (!saveResponse.ok) throw new Error("Failed to publish menu settings");
       const res = await fetch("/api/menu-pdf", { method: "POST" });
       if (res.ok) {
         const { pdfUrl } = await res.json();
@@ -39,8 +64,8 @@ function MenuGeneratorEditor() {
       } else {
         toast.error("Failed to generate PDF");
       }
-    } catch {
-      toast.error("Failed to generate PDF");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to publish menu");
     } finally {
       setGeneratingPdf(false);
     }
@@ -51,7 +76,7 @@ function MenuGeneratorEditor() {
       <PageIntro
         eyebrow="Menu generator"
         title="Create a menu that feels like yours."
-        description="Choose a template, add your details, and preview every change before publishing."
+        description="Start with a template, then customize every part of the layout, type, colors, and content."
         action={
           <Button variant="outline" render={<Link href="/dashboard/menu" />} className="gap-2">
             <ArrowLeft className="h-4 w-4" /> Back to menu
@@ -68,7 +93,7 @@ function MenuGeneratorEditor() {
                   <button
                     key={template.id}
                     type="button"
-                    onClick={() => setSettings({ ...settings, template: template.id })}
+                    onClick={() => setSettings(applyMenuPreset(settings, template.id))}
                     className={cn(
                       "flex items-center gap-3 rounded-xl border p-3 text-left transition",
                       settings.template === template.id ? "border-purple bg-purple-soft" : "border-line bg-surface-soft hover:border-line-strong"
@@ -88,7 +113,27 @@ function MenuGeneratorEditor() {
 
           <Card className="glass-card border-0 ring-0">
             <CardContent className="space-y-4 p-5">
-              <h2 className="card-title">2. Menu information</h2>
+              <div className="flex items-center justify-between gap-3"><div><h2 className="card-title">2. Layout & design</h2><p className="mt-1 text-[11px] text-muted">Shape the menu beyond its starting template.</p></div><Button type="button" variant="ghost" size="sm" onClick={() => setSettings(applyMenuPreset(settings, settings.template))} className="gap-1.5 text-[11px]"><RotateCcw className="h-3.5 w-3.5" /> Reset</Button></div>
+              <ChoiceGroup label="Menu layout" value={settings.layout} options={designOptions.layout} onChange={(layout) => setSettings({ ...settings, layout: layout as MenuSettings["layout"] })} />
+              <ChoiceGroup label="Header" value={settings.headerStyle} options={designOptions.headerStyle} onChange={(headerStyle) => setSettings({ ...settings, headerStyle: headerStyle as MenuSettings["headerStyle"] })} />
+              <ChoiceGroup label="Item cards" value={settings.cardStyle} options={designOptions.cardStyle} onChange={(cardStyle) => setSettings({ ...settings, cardStyle: cardStyle as MenuSettings["cardStyle"] })} />
+              <ChoiceGroup label="Typography" value={settings.fontFamily} options={designOptions.fontFamily} onChange={(fontFamily) => setSettings({ ...settings, fontFamily: fontFamily as MenuSettings["fontFamily"] })} />
+              <ChoiceGroup label="Corners" value={settings.borderRadius} options={designOptions.borderRadius} onChange={(borderRadius) => setSettings({ ...settings, borderRadius: borderRadius as MenuSettings["borderRadius"] })} />
+              <ChoiceGroup label="Category headings" value={settings.categoryStyle} options={designOptions.categoryStyle} onChange={(categoryStyle) => setSettings({ ...settings, categoryStyle: categoryStyle as MenuSettings["categoryStyle"] })} />
+            </CardContent>
+          </Card>
+
+          <Card className="glass-card border-0 ring-0">
+            <CardContent className="space-y-3 p-5">
+              <div><h2 className="card-title">3. Colors</h2><p className="mt-1 text-[11px] text-muted">Use any brand palette. Changes appear instantly.</p></div>
+              {([['background', 'Background'], ['surface', 'Cards'], ['text', 'Text'], ['muted', 'Muted text'], ['accent', 'Accent']] as const).map(([key, label]) => <ColorControl key={key} label={label} value={settings.colors[key]} onChange={(value) => setSettings({ ...settings, colors: { ...settings.colors, [key]: value } })} />)}
+              <Button type="button" variant="outline" size="sm" onClick={() => setSettings({ ...settings, colors: { ...menuDesignPresets[settings.template].colors } })} className="w-full gap-2"><RotateCcw className="h-3.5 w-3.5" /> Restore template colors</Button>
+            </CardContent>
+          </Card>
+
+          <Card className="glass-card border-0 ring-0">
+            <CardContent className="space-y-4 p-5">
+              <h2 className="card-title">4. Content & publishing</h2>
               <div className="space-y-2">
                 <Label htmlFor="generator-name">Business name</Label>
                 <Input id="generator-name" value={businessName} onChange={(e) => setBusinessName(e.target.value)} />
@@ -109,6 +154,9 @@ function MenuGeneratorEditor() {
                 folder="menu"
                 label="Cover image"
               />
+              <div className="space-y-2">
+                {([['showImages', 'Show product images'], ['showDescriptions', 'Show descriptions'], ['showContactInfo', 'Show contact footer']] as const).map(([key, label]) => <label key={key} className="flex cursor-pointer items-center justify-between rounded-xl border border-line bg-surface-soft p-3 text-xs font-semibold text-ink"><span>{label}</span><input type="checkbox" checked={settings[key]} onChange={(event) => setSettings({ ...settings, [key]: event.target.checked })} className="h-4 w-4 accent-purple" /></label>)}
+              </div>
               <div className="flex flex-wrap gap-2">
                 <ProductForm />
                 <Button type="button" onClick={save} disabled={generatingPdf} className="gap-2 bg-purple text-white">

@@ -9,6 +9,7 @@ import {
 } from "@/lib/google/sheets";
 import { ensureBusinessFolder, moveFileToFolder } from "@/lib/google/drive";
 import { writeSnapshot, readSnapshot } from "@/lib/server/snapshots";
+import { normalizeMenuSettings } from "@/lib/menu-settings";
 
 // ─── GET /api/data ────────────────────────────────────────────────────────────
 export async function GET(req: NextRequest) {
@@ -70,7 +71,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const {
     business,
-    menuSettings,
+    menuSettings: rawMenuSettings,
     categories,
     products,
     customers,
@@ -80,6 +81,7 @@ export async function POST(req: NextRequest) {
     redemptions,
     menuViews,
   } = body;
+  const menuSettings = normalizeMenuSettings(rawMenuSettings);
 
   const sub = token.googleSub as string;
   let mapping = await getOwnerMapping(sub);

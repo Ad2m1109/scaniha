@@ -31,7 +31,7 @@ export interface PublicSnapshot {
     currency: string;
     heroImage: string;
     tagline: string;
-  };
+  } & Partial<MenuSettings>;
   menuPdfUrl: string;
   categories: Category[];
   products: Product[];
@@ -76,12 +76,7 @@ export function writeSnapshot(
       instagram:   business.instagram   ?? "",
       whatsapp:    business.whatsapp    ?? "",
     },
-    style: {
-      template:   settings.template   ?? "lavender",
-      currency:   settings.currency   ?? "DA",
-      heroImage:  settings.heroImage  ?? "",
-      tagline:    settings.tagline    ?? "",
-    },
+    style: { ...settings },
     menuPdfUrl: business.menuPdfUrl ?? "",
     categories,
     products,
