@@ -5,9 +5,9 @@ import type { BusinessProfile, Category, MenuSettings, Product } from "@/types";
 // Stored under .data/snapshots/{businessId}.json
 const snapshotDir = path.join(process.cwd(), ".data", "snapshots");
 
-function ensureDir() {
+async function ensureDir() {
   if (!fs.existsSync(snapshotDir)) {
-    fs.mkdirSync(snapshotDir, { recursive: true });
+    await fs.promises.mkdir(snapshotDir, { recursive: true });
   }
 }
 
@@ -43,25 +43,26 @@ function snapshotPath(businessId: string): string {
   return path.join(snapshotDir, `${safe}.json`);
 }
 
-export function readSnapshot(businessId: string): PublicSnapshot | null {
+export async function readSnapshot(businessId: string): Promise<PublicSnapshot | null> {
   try {
-    ensureDir();
+    await ensureDir();
     const file = snapshotPath(businessId);
     if (!fs.existsSync(file)) return null;
-    return JSON.parse(fs.readFileSync(file, "utf-8")) as PublicSnapshot;
+    const content = await fs.promises.readFile(file, "utf-8");
+    return JSON.parse(content) as PublicSnapshot;
   } catch {
     return null;
   }
 }
 
-export function writeSnapshot(
+export async function writeSnapshot(
   businessId: string,
   business: BusinessProfile,
   settings: MenuSettings,
   categories: Category[],
   products: Product[]
-): void {
-  ensureDir();
+): Promise<void> {
+  await ensureDir();
   const snapshot: PublicSnapshot = {
     businessId,
     publishedAt: new Date().toISOString(),
@@ -81,5 +82,8 @@ export function writeSnapshot(
     categories,
     products,
   };
-  fs.writeFileSync(snapshotPath(businessId), JSON.stringify(snapshot), "utf-8");
+  const file = snapshotPath(businessId);
+  const tmpFile = `${file}.tmp`;
+  await fs.promises.writeFile(tmpFile, JSON.stringify(snapshot), "utf-8");
+  await fs.promises.rename(tmpFile, file);
 }

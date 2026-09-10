@@ -74,7 +74,7 @@ export function LoyaltyCardPreview() {
         </div>
         <div className="mt-4 flex items-center gap-2 text-[11px] font-semibold text-muted">
           <CakeSlice aria-hidden="true" className="h-3.5 w-3.5 text-gold" strokeWidth={1.8} />
-          <span>{visitsToFreeReward} visits to your free pastry</span>
+          <span>{visitsToFreeReward} visits to your next reward</span>
           <Badge className="ml-auto h-auto rounded-full border-0 bg-gold-soft px-2 py-1 text-[10px] font-bold text-accent-foreground">{visitsToFreeReward <= 2 ? "Almost there" : "Keep going"}</Badge>
         </div>
       </CardContent>

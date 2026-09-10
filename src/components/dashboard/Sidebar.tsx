@@ -116,7 +116,7 @@ export function Sidebar() {
     : String(customers.length);
 
   return (
-    <aside className="desktop-sidebar hidden overflow-y-auto border-r border-line bg-surface-soft px-5 py-6 lg:flex lg:flex-col">
+    <aside className="desktop-sidebar hidden border-r border-line bg-surface-soft px-5 py-6 lg:flex lg:flex-col lg:overflow-hidden">
       <div className="flex items-center gap-3 px-2">
         <div className="relative grid h-10 w-10 place-items-center rounded-[14px] border border-purple-dark bg-purple text-white shadow-sm">
           <span className="absolute inset-[5px] rounded-[5px] border border-white/25" />
@@ -144,12 +144,14 @@ export function Sidebar() {
         <ChevronsUpDown aria-hidden="true" className="h-4 w-4 shrink-0 text-muted" strokeWidth={1.8} />
       </Button>
 
-       <div className="mt-8 px-3 text-[10px] font-bold uppercase tracking-[.18em] text-muted">Workspace</div>
-      <div className="mt-3">
-        <NavigationLinks pathname={pathname} customerBadge={customerBadge} />
+      <div className="mt-8 flex-1 overflow-y-auto overscroll-contain">
+        <div className="px-3 text-[10px] font-bold uppercase tracking-[.18em] text-muted">Workspace</div>
+        <div className="mt-3">
+          <NavigationLinks pathname={pathname} customerBadge={customerBadge} />
+        </div>
       </div>
 
-      <div className="mt-auto space-y-3">
+      <div className="mt-4 space-y-3">
         <div className="rounded-2xl border border-line bg-surface-solid p-3">
           <div className="flex items-center gap-2">
             <span className="grid h-7 w-7 place-items-center rounded-lg bg-gold-soft text-accent-foreground">

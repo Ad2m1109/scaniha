@@ -34,7 +34,7 @@ interface OnboardingData {
 }
 
 const STEPS = [
-  { id: "welcome", title: "Your cafe", icon: Coffee },
+  { id: "welcome", title: "Your business", icon: Coffee },
   { id: "details", title: "Location & contact", icon: MapPin },
   { id: "branding", title: "Brand & social", icon: Share2 },
   { id: "loyalty", title: "Loyalty rules", icon: Gift },
@@ -82,7 +82,7 @@ export function OnboardingWizard() {
             <Sparkles className="h-5 w-5" strokeWidth={1.8} />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-ink">
-            Set up your cafe
+            Set up your business
           </h1>
           <p className="mt-1.5 text-sm text-muted">
             A few details and you&apos;re ready to go.
@@ -131,7 +131,7 @@ export function OnboardingWizard() {
               <div className="space-y-5">
                 <div>
                   <h2 className="text-lg font-bold text-ink">
-                    What&apos;s your cafe called?
+                    What&apos;s your business called?
                   </h2>
                   <p className="mt-1 text-sm text-muted">
                     This appears on your menu, QR page, and loyalty cards.
@@ -367,7 +367,7 @@ export function OnboardingWizard() {
                   disabled={submitting}
                   className="gap-1.5 bg-purple text-white hover:bg-purple-dark"
                 >
-                  {submitting ? "Setting up..." : "Launch my cafe"}
+                  {submitting ? "Setting up..." : "Launch my business"}
                   {!submitting && <Check className="h-4 w-4" />}
                 </Button>
               )}

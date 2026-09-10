@@ -72,7 +72,7 @@ function MenuGeneratorEditor() {
   }
 
   return (
-    <div className="mx-auto max-w-[1280px] space-y-6">
+    <div className="mx-auto max-w-[1280px] space-y-4">
       <PageIntro
         eyebrow="Menu generator"
         title="Create a menu that feels like yours."
@@ -83,8 +83,8 @@ function MenuGeneratorEditor() {
           </Button>
         }
       />
-      <div className="grid gap-5 xl:grid-cols-[380px_minmax(0,1fr)]">
-        <div className="space-y-5">
+      <div className="grid gap-4 xl:grid-cols-[380px_minmax(0,1fr)]">
+        <div className="space-y-4">
           <Card className="glass-card border-0 ring-0">
             <CardContent className="p-5">
               <h2 className="card-title">1. Choose a template</h2>

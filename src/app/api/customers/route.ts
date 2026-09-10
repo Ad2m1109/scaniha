@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { getOwnerMapping } from "@/lib/server/db";
 import { loadFromGoogleSheets } from "@/lib/google/sheets";
+import { rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 // ─── GET /api/customers ──────────────────────────────────────────────────────
 export async function GET(req: NextRequest) {
+  const rl = rateLimit(req, { windowMs: 60_000, maxRequests: 60, keyPrefix: "customers:get" });
+  if (!rl.allowed) return rateLimitResponse(rl.resetAt);
+
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   if (!token?.googleSub || !token?.accessToken) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -31,6 +35,9 @@ export async function GET(req: NextRequest) {
 
 // ─── DELETE /api/customers ───────────────────────────────────────────────────
 export async function DELETE(req: NextRequest) {
+  const rl = rateLimit(req, { windowMs: 60_000, maxRequests: 20, keyPrefix: "customers:delete" });
+  if (!rl.allowed) return rateLimitResponse(rl.resetAt);
+
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   if (!token?.googleSub || !token?.accessToken || !token?.businessId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { ScanLine } from "lucide-react";
 import { QRCodeGenerator } from "@/components/qr/QRCodeGenerator";
@@ -11,18 +11,19 @@ import { useAppData } from "@/context/AppDataContext";
 
 export default function QRCodesPage() {
   const data = useAppData();
-  const [origin, setOrigin] = useState("");
-
-  useEffect(() => {
-    setOrigin(window.location.origin);
-  }, []);
+  const [origin] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.location.origin;
+    }
+    return "";
+  });
 
   const fallbackUrl = `${origin}/public/menu/${data.business.id}?source=qr`;
   const menuUrl = data.business.menuPdfUrl || fallbackUrl;
   const isPdf = !!data.business.menuPdfUrl;
 
   return (
-    <div className="mx-auto max-w-[1280px] space-y-6">
+    <div className="mx-auto max-w-[1280px] space-y-4">
       <PageIntro
         eyebrow="Menu & member codes"
         title="One scan, every visit."
@@ -34,7 +35,7 @@ export default function QRCodesPage() {
         }
       />
 
-      <section className="grid gap-5 md:grid-cols-2">
+      <section className="grid gap-4 md:grid-cols-2">
         <Card className="glass-card border-0 ring-0">
           <CardHeader>
             <CardTitle className="card-title">Menu QR code</CardTitle>

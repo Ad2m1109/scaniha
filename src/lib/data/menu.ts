@@ -2,32 +2,32 @@ import type { Category, Product } from "@/types";
 
 export const categories: Category[] = [
   {
-    id: "coffee",
-    name: "Coffee",
-    description: "Espresso-led drinks and slow pours.",
+    id: "popular",
+    name: "Popular",
+    description: "Customer favorites.",
     sortOrder: 1,
   },
   {
-    id: "pastries",
-    name: "Pastries",
-    description: "Fresh bakes for the morning rush.",
+    id: "specials",
+    name: "Specials",
+    description: "Limited offers and seasonal picks.",
     sortOrder: 2,
   },
   {
-    id: "seasonal",
-    name: "Seasonal",
-    description: "Limited pours and rotating favorites.",
+    id: "extras",
+    name: "Extras",
+    description: "Add-ons and sides.",
     sortOrder: 3,
   },
 ];
 
 export const products: Product[] = [
-  { id: "flat-white", categoryId: "coffee", name: "Flat white", description: "Double espresso with silky steamed milk.", price: 5.5, image: "", available: true, sortOrder: 1 },
-  { id: "cappuccino", categoryId: "coffee", name: "Cappuccino", description: "Rich espresso, foam, and a little cocoa.", price: 5, image: "", available: true, sortOrder: 2 },
-  { id: "cold-brew", categoryId: "coffee", name: "Cold brew", description: "Slow-steeped for a smooth finish.", price: 5.75, image: "", available: true, sortOrder: 3 },
-  { id: "matcha-latte", categoryId: "seasonal", name: "Matcha latte", description: "Ceremonial matcha with oat milk.", price: 6.25, image: "", available: true, sortOrder: 1 },
-  { id: "citrus-tonic", categoryId: "seasonal", name: "Citrus tonic", description: "Bright espresso, citrus, and sparkling water.", price: 6, image: "", available: true, sortOrder: 2 },
-  { id: "butter-croissant", categoryId: "pastries", name: "Butter croissant", description: "Flaky, layered, and baked each morning.", price: 4.25, image: "", available: true, sortOrder: 1 },
-  { id: "pastry-pair", categoryId: "pastries", name: "Pastry pair", description: "Two daily pastries to share.", price: 7.5, image: "", available: true, sortOrder: 2 },
-  { id: "banana-bread", categoryId: "pastries", name: "Banana bread", description: "Warm slice with toasted walnuts.", price: 4.75, image: "", available: false, sortOrder: 3 },
+  { id: "item-1", categoryId: "popular", name: "Signature item", description: "Our most popular pick.", price: 5.5, image: "", available: true, sortOrder: 1 },
+  { id: "item-2", categoryId: "popular", name: "Classic favorite", description: "A timeless choice.", price: 5, image: "", available: true, sortOrder: 2 },
+  { id: "item-3", categoryId: "popular", name: "House special", description: "Made fresh every day.", price: 5.75, image: "", available: true, sortOrder: 3 },
+  { id: "item-4", categoryId: "specials", name: "Seasonal pick", description: "Available for a limited time.", price: 6.25, image: "", available: true, sortOrder: 1 },
+  { id: "item-5", categoryId: "specials", name: "Daily deal", description: "Today's best offer.", price: 6, image: "", available: true, sortOrder: 2 },
+  { id: "item-6", categoryId: "extras", name: "Side order", description: "Perfect complement to any purchase.", price: 4.25, image: "", available: true, sortOrder: 1 },
+  { id: "item-7", categoryId: "extras", name: "Add-on extra", description: "Upgrade your order.", price: 7.5, image: "", available: true, sortOrder: 2 },
+  { id: "item-8", categoryId: "extras", name: "Value bundle", description: "Two items to share.", price: 4.75, image: "", available: false, sortOrder: 3 },
 ];

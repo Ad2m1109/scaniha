@@ -102,6 +102,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       session.user.businessId = token.businessId as string;
       session.user.onboardingComplete = token.onboardingComplete as boolean;
+      session.user.googleSub = token.googleSub as string;
       // NOTE: accessToken and refreshToken are intentionally NOT passed to the
       // client session. They are only used in server-side API routes via
       // the JWT (retrieved with auth() on the server).

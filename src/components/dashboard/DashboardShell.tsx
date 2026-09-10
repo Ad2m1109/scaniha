@@ -4,16 +4,23 @@ import { useState } from "react";
 
 import { Header } from "@/components/dashboard/Header";
 import { MobileNavigation, Sidebar } from "@/components/dashboard/Sidebar";
+import { DashboardSkeleton } from "@/components/shared/LoadingSpinner";
 import { cn } from "@/lib/utils";
 
 export function DashboardShell({
   children,
+  ready = true,
 }: Readonly<{
   children: React.ReactNode;
+  ready?: boolean;
 }>) {
   const [isDark, setIsDark] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
+
+  if (!ready) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <div
@@ -21,9 +28,9 @@ export function DashboardShell({
       data-theme={isDark ? "dark" : "light"}
       data-mobile-open={mobileOpen}
     >
-      <div className="mx-auto grid min-h-screen max-w-[1540px] lg:grid-cols-[246px_minmax(0,1fr)]">
+      <div className="mx-auto grid h-screen max-w-[1540px] lg:grid-cols-[246px_minmax(0,1fr)]">
         <Sidebar />
-        <main className="relative min-w-0 px-4 pb-10 sm:px-6 lg:px-12 lg:pb-12">
+        <main className="relative min-w-0 overflow-y-auto px-4 pb-10 sm:px-6 lg:px-12 lg:pb-12">
           <Header
             isDark={isDark}
             mobileOpen={mobileOpen}

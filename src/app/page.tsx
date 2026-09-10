@@ -21,7 +21,7 @@ const productPillars = [
   {
     icon: QrCode,
     title: "One scan to join",
-    body: "Place a single QR by the till. Customers sign in with their phone and start earning in seconds — no app download.",
+    body: "Place a single QR at your counter. Customers sign in with their phone and start earning in seconds — no app download.",
   },
   {
     icon: CreditCard,
@@ -31,7 +31,7 @@ const productPillars = [
   {
     icon: Gift,
     title: "Rewards you control",
-    body: "Set the visit goal, name the perk, change it anytime. Free latte, pastry, or a 20% off coupon — your call.",
+    body: "Set the visit goal, name the perk, change it anytime. Free product, discount, or a special offer — your call.",
   },
   {
     icon: Coffee,
@@ -44,12 +44,12 @@ const steps = [
   {
     number: "01",
     title: "Set up in ten minutes",
-    body: "Add your cafe, name a reward, pick how points work. We prefill the rest.",
+    body: "Add your business, name a reward, pick how points work. We prefill the rest.",
   },
   {
     number: "02",
     title: "Print one QR code",
-    body: "Stick it by the till or on every table. Customers scan straight into your program.",
+    body: "Stick it at your counter or on every table. Customers scan straight into your program.",
   },
   {
     number: "03",
@@ -60,7 +60,7 @@ const steps = [
 
 const testimonials = [
   {
-    quote: "We stopped printing paper cards. Regulars now scan at the till and chase the next reward on their own.",
+    quote: "We stopped printing paper cards. Regulars now scan at the counter and chase the next reward on their own.",
     name: "Nadia Belkacem",
     role: "Owner, Café El Wail",
   },
@@ -76,18 +76,20 @@ const plans = [
     name: "Starter",
     price: "Free",
     period: "forever",
-    description: "Run a single cafe with a working loyalty program from day one.",
+    description: "Run a single location with a working loyalty program from day one.",
     features: ["1 loyalty program", "QR check-in & digital cards", "Core member analytics"],
-    cta: "Start free",
+    cta: "Get started",
+    href: "/auth/register",
     featured: false,
   },
   {
     name: "Growth",
     price: "$29",
     period: "per month",
-    description: "For cafes ready to turn visits into a real habit.",
+    description: "For businesses ready to turn visits into a real habit.",
     features: ["Everything in Starter", "Live digital menu", "Automated member nudges", "Monthly email reports"],
     cta: "Start 14-day trial",
+    href: "/auth/register",
     featured: true,
   },
   {
@@ -97,6 +99,7 @@ const plans = [
     description: "For busy counters and multi-location teams.",
     features: ["Everything in Growth", "Multi-location insights", "Priority support & onboarding"],
     cta: "Talk to us",
+    href: "mailto:hello@perkly.app",
     featured: false,
   },
 ];
@@ -134,10 +137,10 @@ export default function Home() {
               Sign in
             </Link>
             <Link
-              href="/dashboard"
+              href="/auth/register"
               className="inline-flex h-9 items-center justify-center rounded-xl bg-purple px-4 text-xs font-bold text-white shadow-[0_6px_14px_#7C3AED2E] transition-all duration-200 hover:bg-purple-dark"
             >
-              Start free
+              Get started
             </Link>
           </div>
         </div>
@@ -148,7 +151,7 @@ export default function Home() {
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface-solid px-3 py-1.5 text-[11px] font-semibold text-muted">
               <span className="h-1.5 w-1.5 rounded-full bg-purple" aria-hidden="true" />
-              Loyalty studio for modern cafes
+              Loyalty studio for modern businesses
             </span>
             <h1 className="mt-5 text-4xl font-bold leading-[1.05] tracking-[-.045em] sm:text-5xl lg:text-[56px]">
               Turn regulars into{" "}
@@ -158,11 +161,11 @@ export default function Home() {
               .
             </h1>
             <p className="mt-5 max-w-lg text-base font-light leading-relaxed text-muted sm:text-lg">
-              One QR at the register. A card in every wallet. Rewards your customers actually redeem. Perkly runs your loyalty in the background while you keep pouring.
+              One QR at the register. A card in every wallet. Rewards your customers actually redeem. Perkly runs your loyalty in the background while you focus on what you do best.
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Link href="/dashboard" className={basePrimary}>
-                Start free — no card needed
+              <Link href="/auth/register" className={basePrimary}>
+                Get started — it&apos;s free
                 <ArrowRight aria-hidden="true" className="h-4 w-4" strokeWidth={2} />
               </Link>
               <a href="#how-it-works" className={baseSecondary}>
@@ -171,7 +174,7 @@ export default function Home() {
             </div>
             <p className="mt-5 flex items-center gap-2 text-[11px] font-semibold text-muted">
               <BadgeCheck aria-hidden="true" className="h-4 w-4 text-success" strokeWidth={1.8} />
-              Free forever for one cafe. Upgrade only when you outgrow it.
+              Free forever for one location. Upgrade only when you outgrow it.
             </p>
             <dl className="mt-8 grid max-w-md grid-cols-3 gap-4 border-t border-line pt-6">
               {trustStats.map((stat) => (
@@ -229,7 +232,7 @@ export default function Home() {
                 <span className="shrink-0 text-[11px] font-bold text-amber-100">8 / 10</span>
               </div>
               <div className="relative mt-5 h-px bg-white/15" />
-              <p className="relative mt-3 text-[11px] text-white/70">2 visits to a free pastry</p>
+              <p className="relative mt-3 text-[11px] text-white/70">2 visits to your next reward</p>
             </div>
             <div className="mt-4 flex items-center justify-center gap-2 rounded-2xl border border-line bg-surface-solid px-4 py-3 text-[11px] font-semibold text-muted">
               <span className="relative flex h-2 w-2">
@@ -245,10 +248,10 @@ export default function Home() {
           <div className="max-w-2xl">
             <p className="eyebrow">The toolkit</p>
             <h2 className="mt-3 text-3xl font-bold tracking-[-.04em] sm:text-4xl">
-              Everything your cafe needs, in one place.
+              Everything your business needs, in one place.
             </h2>
             <p className="body-copy mt-3">
-              Four tools, one subscription, zero clunky hardware. Built for the way cafes actually run.
+              Four tools, one subscription, zero clunky hardware. Built for the way businesses actually run.
             </p>
           </div>
           <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -271,7 +274,7 @@ export default function Home() {
           <div className="max-w-2xl">
             <p className="eyebrow">How it works</p>
             <h2 className="mt-3 text-3xl font-bold tracking-[-.04em] sm:text-4xl">
-              Live in your cafe this afternoon.
+              Live in your business this afternoon.
             </h2>
             <p className="body-copy mt-3">
               No developer, no printer, no problem. Three steps and your loyalty program is open for business.
@@ -291,8 +294,8 @@ export default function Home() {
               <p className="text-sm font-bold text-ink">Curious how it looks on your phone?</p>
               <p className="mt-1 text-[12px] font-light text-muted">Open a live demo card — no signup, no email.</p>
             </div>
-            <Link href="/dashboard" className={basePrimary}>
-              Open live demo
+            <Link href="/auth/register" className={basePrimary}>
+              Get started
               <ArrowRight aria-hidden="true" className="h-4 w-4" strokeWidth={2} />
             </Link>
           </div>
@@ -373,7 +376,7 @@ export default function Home() {
                   ))}
                 </ul>
                 <Link
-                  href="/dashboard"
+                  href={plan.href}
                   className={`mt-7 inline-flex h-10 items-center justify-center rounded-xl text-xs font-bold transition-all duration-200 ${
                     plan.featured
                       ? "bg-purple text-white shadow-[0_8px_18px_#7C3AED33] hover:bg-purple-dark"
@@ -398,14 +401,14 @@ export default function Home() {
                 Your next regular is one scan away.
               </h2>
               <p className="mt-3 max-w-lg text-[14px] font-light leading-relaxed text-white/75">
-                Spin up a working loyalty program in ten minutes. Free forever for one cafe — no card, no commitment, no salesperson.
+                Spin up a working loyalty program in ten minutes. Free forever for one location — no card, no commitment, no salesperson.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Link
-                  href="/dashboard"
+                  href="/auth/register"
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 text-sm font-bold text-ink transition-all duration-200 hover:bg-amber-200"
                 >
-                  Start free
+                  Get started
                   <ArrowRight aria-hidden="true" className="h-4 w-4" strokeWidth={2} />
                 </Link>
                 <a
@@ -421,7 +424,7 @@ export default function Home() {
               <ul className="mt-4 space-y-3 text-[13px] text-white/85">
                 {[
                   "Branded loyalty card, ready to share",
-                  "One QR code for the till",
+                  "One QR code for your counter",
                   "Member list and basic analytics",
                   "Sample rewards you can edit later",
                 ].map((perk) => (
@@ -441,7 +444,7 @@ export default function Home() {
           <span>Perkly — Loyalty Studio</span>
           <span className="flex items-center gap-2">
             <Coffee aria-hidden="true" className="h-3.5 w-3.5 text-gold" strokeWidth={1.8} />
-            Built for the morning ritual.
+            Built for the daily ritual.
           </span>
         </div>
       </footer>

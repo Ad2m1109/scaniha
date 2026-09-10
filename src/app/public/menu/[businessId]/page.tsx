@@ -7,6 +7,6 @@ export default async function PublicMenuPage({
   params: Promise<{ businessId: string }>;
 }) {
   const { businessId } = await params;
-  const snapshot = readSnapshot(businessId);
+  const snapshot = await readSnapshot(businessId);
   return <PublicMenuClient businessId={businessId} snapshot={snapshot} />;
 }

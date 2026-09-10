@@ -6,6 +6,7 @@ import { generateMenuPdf } from "@/lib/pdf";
 import { uploadPdfVersioned } from "@/lib/google/drive";
 import type { MenuTemplateId } from "@/types";
 import { normalizeMenuSettings } from "@/lib/menu-settings";
+import { rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 /**
  * POST /api/menu-pdf
@@ -13,6 +14,9 @@ import { normalizeMenuSettings } from "@/lib/menu-settings";
  * Returns the Drive URL of the PDF.
  */
 export async function POST(req: NextRequest) {
+  const rl = rateLimit(req, { windowMs: 60_000, maxRequests: 5, keyPrefix: "menu-pdf" });
+  if (!rl.allowed) return rateLimitResponse(rl.resetAt);
+
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   if (!token?.googleSub || !token?.accessToken || !token?.businessId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

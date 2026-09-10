@@ -1,7 +1,7 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import { ArrowRight, Coffee, Croissant, CupSoda } from "lucide-react";
+import { ArrowRight, Gift, Star, Trophy } from "lucide-react";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
@@ -16,9 +16,9 @@ interface RewardIcon {
 }
 
 const rewardIcons: Record<string, RewardIcon> = {
-  "free-latte": { icon: CupSoda, iconClassName: "bg-gold-soft text-accent-foreground" },
-  "pastry-pair": { icon: Croissant, iconClassName: "bg-purple-soft text-purple" },
-  "coffee-flight": { icon: Coffee, iconClassName: "bg-secondary text-foreground" },
+  "free-latte": { icon: Gift, iconClassName: "bg-gold-soft text-accent-foreground" },
+  "pastry-pair": { icon: Star, iconClassName: "bg-purple-soft text-purple" },
+  "coffee-flight": { icon: Trophy, iconClassName: "bg-secondary text-foreground" },
 };
 
 export function TopRewards() {

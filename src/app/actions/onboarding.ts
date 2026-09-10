@@ -60,7 +60,7 @@ export async function completeOnboarding(data: OnboardingInput) {
   };
 
   try {
-    writeSnapshot(session.user.businessId, business, settings, [], []);
+    await writeSnapshot(session.user.businessId, business, settings, [], []);
   } catch (e) {
     console.error("Failed to write snapshot:", e);
   }

@@ -39,29 +39,31 @@ function releaseLock() {
   }
 }
 
-function ensureDb() {
+async function ensureDb() {
   if (!fs.existsSync(dbDir)) {
-    fs.mkdirSync(dbDir, { recursive: true });
+    await fs.promises.mkdir(dbDir, { recursive: true });
   }
   if (!fs.existsSync(dbFile)) {
-    fs.writeFileSync(dbFile, JSON.stringify([]), "utf-8");
+    await fs.promises.writeFile(dbFile, JSON.stringify([]), "utf-8");
   }
 }
 
-function readDb(): OwnerMapping[] {
-  ensureDb();
-  return JSON.parse(fs.readFileSync(dbFile, "utf-8")) as OwnerMapping[];
+async function readDb(): Promise<OwnerMapping[]> {
+  await ensureDb();
+  return JSON.parse(await fs.promises.readFile(dbFile, "utf-8")) as OwnerMapping[];
 }
 
-function writeDb(data: OwnerMapping[]): void {
-  ensureDb();
-  fs.writeFileSync(dbFile, JSON.stringify(data, null, 2), "utf-8");
+async function writeDb(data: OwnerMapping[]): Promise<void> {
+  await ensureDb();
+  const tmpFile = `${dbFile}.tmp`;
+  await fs.promises.writeFile(tmpFile, JSON.stringify(data, null, 2), "utf-8");
+  await fs.promises.rename(tmpFile, dbFile);
 }
 
 export async function getOwnerMapping(sub: string): Promise<OwnerMapping | undefined> {
   await acquireLock();
   try {
-    const data = readDb();
+    const data = await readDb();
     return data.find((m) => m.sub === sub);
   } finally {
     releaseLock();
@@ -71,7 +73,7 @@ export async function getOwnerMapping(sub: string): Promise<OwnerMapping | undef
 export async function getOwnerMappingByBusinessId(businessId: string): Promise<OwnerMapping | undefined> {
   await acquireLock();
   try {
-    const data = readDb();
+    const data = await readDb();
     return data.find((m) => m.businessId === businessId);
   } finally {
     releaseLock();
@@ -81,14 +83,14 @@ export async function getOwnerMappingByBusinessId(businessId: string): Promise<O
 export async function saveOwnerMapping(mapping: OwnerMapping): Promise<void> {
   await acquireLock();
   try {
-    const data = readDb();
+    const data = await readDb();
     const index = data.findIndex((m) => m.sub === mapping.sub);
     if (index >= 0) {
       data[index] = mapping;
     } else {
       data.push(mapping);
     }
-    writeDb(data);
+    await writeDb(data);
   } finally {
     releaseLock();
   }

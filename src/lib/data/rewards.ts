@@ -3,7 +3,7 @@ import type { Reward } from "@/types";
 export const rewards: Reward[] = [
   {
     id: "free-latte",
-    name: "Free latte",
+    name: "Free item",
     description: "Most popular this week",
     image: "",
     pointsRequired: 250,
@@ -12,8 +12,8 @@ export const rewards: Reward[] = [
   },
   {
     id: "pastry-pair",
-    name: "Pastry pair",
-    description: "Sweeten the next visit",
+    name: "Pair deal",
+    description: "Bring a friend",
     image: "",
     pointsRequired: 400,
     redemptions: 174,
@@ -21,7 +21,7 @@ export const rewards: Reward[] = [
   },
   {
     id: "coffee-flight",
-    name: "Coffee flight",
+    name: "Taste test",
     description: "Try something new",
     image: "",
     pointsRequired: 650,
@@ -30,8 +30,8 @@ export const rewards: Reward[] = [
   },
   {
     id: "brunch-for-two",
-    name: "Brunch for two",
-    description: "A weekend table for two",
+    name: "VIP experience",
+    description: "Exclusive member perk",
     image: "",
     pointsRequired: 900,
     redemptions: 42,

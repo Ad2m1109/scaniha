@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Toaster, toast } from "sonner";
 
 import { seedState } from "@/lib/data/seed";
@@ -55,6 +55,8 @@ function archiveImageLocal(imageUrl: string, businessId: string, category: strin
 export function AppDataProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<AppState>(seedState);
   const [ready, setReady] = useState(false);
+  const isDirtyRef = useRef(false);
+  const lastSyncedStateRef = useRef<string>("");
 
   // ── Load from remote on mount ──────────────────────────────────────────────
   useEffect(() => {
@@ -76,7 +78,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
 
             // Use namespaced cache if available, otherwise use legacy + server data
             const base = cache ?? localState;
-            setState({
+            const newState = {
               ...base,
               business: {
                 ...base.business,
@@ -92,7 +94,9 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
               visits: remoteData.visits ?? base.visits,
               redemptions: remoteData.redemptions ?? base.redemptions,
               menuViews: remoteData.menuViews ?? base.menuViews,
-            });
+            };
+            setState(newState);
+            lastSyncedStateRef.current = JSON.stringify(newState);
             setReady(true);
             return;
           }
@@ -114,12 +118,27 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     init();
   }, []);
 
+  // ── Track dirty state ─────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!ready) return;
+    const stateStr = JSON.stringify(state);
+    if (stateStr !== lastSyncedStateRef.current) {
+      isDirtyRef.current = true;
+    }
+  }, [state, ready]);
+
   // ── Auto-save to localStorage + remote ─────────────────────────────────────
   useEffect(() => {
     if (!ready) return;
     saveAppState(state, state.business.id);
 
+    if (!isDirtyRef.current) return;
+
     const timer = setTimeout(() => {
+      isDirtyRef.current = false;
+      const stateStr = JSON.stringify(state);
+      lastSyncedStateRef.current = stateStr;
+
       fetch("/api/data", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -146,19 +165,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, [
-    ready,
-    state.business,
-    state.menuSettings,
-    state.categories,
-    state.products,
-    state.customers,
-    state.rewards,
-    state.loyalty,
-    state.visits,
-    state.redemptions,
-    state.menuViews,
-  ]);
+  }, [ready, state]);
 
   // ── Category CRUD ──────────────────────────────────────────────────────────
   const addCategory = useCallback((input: Omit<Category, "id" | "sortOrder">) => {

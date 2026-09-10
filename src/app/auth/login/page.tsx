@@ -15,7 +15,7 @@ const features = [
   {
     icon: QrCode,
     title: "QR check-in",
-    desc: "One scan at the till and loyalty points are added instantly.",
+    desc: "One scan at the counter and loyalty points are added instantly.",
   },
   {
     icon: Gift,
@@ -67,7 +67,7 @@ export default function LoginPage() {
         </div>
 
         <p className="relative text-[11px] font-semibold text-white/30">
-          Free forever for one cafe.
+          Free forever for one location.
         </p>
       </div>
 
@@ -116,14 +116,13 @@ export default function LoginPage() {
 
               <div className="mt-6 text-center text-xs text-muted">
                 New here?{" "}
-                <button
-                  type="button"
-                  onClick={() => signIn("google", { callbackUrl: "/auth/onboarding" })}
+                <Link
+                  href="/auth/register"
                   className="font-semibold text-purple transition-colors hover:text-purple-dark"
                 >
-                  Create your cafe
+                  Create your account
                   <ArrowRight className="ml-1 inline h-3 w-3" />
-                </button>
+                </Link>
               </div>
             </CardContent>
           </Card>

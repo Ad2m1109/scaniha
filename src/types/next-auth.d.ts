@@ -8,6 +8,7 @@ declare module "next-auth" {
     user: {
       businessId: string;
       onboardingComplete: boolean;
+      googleSub: string;
     } & DefaultSession["user"];
     error?: string;
   }
