@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { LogOut } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { handleSignOut } from "@/app/actions/auth";
 
@@ -20,6 +20,9 @@ export function SidebarAccount() {
       className="flex h-auto w-full items-center justify-start gap-3 rounded-2xl border border-transparent px-2 py-2 text-left hover:border-line hover:bg-purple-wash transition"
     >
       <Avatar size="default" className="h-9 w-9 bg-purple-soft text-purple-dark">
+        {session?.user?.image ? (
+          <AvatarImage src={session.user.image} alt={userName} />
+        ) : null}
         <AvatarFallback className="bg-transparent text-xs font-bold text-purple-dark">
           {initials || "?"}
         </AvatarFallback>

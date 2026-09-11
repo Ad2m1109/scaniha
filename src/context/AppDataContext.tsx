@@ -44,12 +44,19 @@ interface AppDataContextValue extends AppState {
 
 const AppDataContext = createContext<AppDataContextValue | null>(null);
 
-function archiveImageLocal(imageUrl: string, businessId: string, category: string) {
+function archiveImageLocal(imageUrl: string, businessId: string, category: string, attempt = 0) {
   fetch("/api/archive", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ imageUrl, category }),
-  }).catch(() => {});
+  }).catch((err) => {
+    if (attempt < 3) {
+      const delay = Math.pow(2, attempt) * 1000;
+      setTimeout(() => archiveImageLocal(imageUrl, businessId, category, attempt + 1), delay);
+    } else {
+      console.error(`[Archive] Failed after 3 attempts: ${imageUrl}`, err);
+    }
+  });
 }
 
 export function AppDataProvider({ children }: { children: React.ReactNode }) {
@@ -190,6 +197,11 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
           archiveImageLocal(p.image, current.business.id, "products");
         }
       }
+      // Archive the category image itself
+      const category = current.categories.find((c) => c.id === categoryId);
+      if (category?.image && current.business.id) {
+        archiveImageLocal(category.image, current.business.id, "menu");
+      }
       return {
         ...current,
         categories: current.categories.filter((item) => item.id !== categoryId),
@@ -227,19 +239,11 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
       const ordered = [...current.products].sort((a, b) => a.sortOrder - b.sortOrder);
       const index = ordered.findIndex((item) => item.id === productId);
       const target = index + direction;
-      if (index < 0 || target < 0 || target >= ordered.length || ordered[index].categoryId !== ordered[target].categoryId) return current;
+      if (index < 0 || target < 0 || target >= ordered.length) return current;
       [ordered[index], ordered[target]] = [ordered[target], ordered[index]];
-      // Only renumber products within the same category
-      const categoryId = ordered[index].categoryId;
-      let categoryCounter = 1;
       return {
         ...current,
-        products: ordered.map((item) => {
-          if (item.categoryId === categoryId) {
-            return { ...item, sortOrder: categoryCounter++ };
-          }
-          return item;
-        }),
+        products: ordered.map((item, i) => ({ ...item, sortOrder: i + 1 })),
       };
     });
   }, []);

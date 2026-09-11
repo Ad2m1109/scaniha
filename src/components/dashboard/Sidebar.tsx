@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import {
   BarChart3,
-  Coffee,
   Gift,
   LayoutDashboard,
   QrCode,
@@ -16,12 +15,14 @@ import {
   HeartHandshake,
   ScanLine,
   WandSparkles,
+  Package,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAppData } from "@/context/AppDataContext";
 import { SidebarAccount } from "@/components/dashboard/SidebarAccount";
+import { Logo } from "@/components/Logo";
 import { cn } from "@/lib/utils";
 
 export interface NavigationItem {
@@ -35,7 +36,7 @@ export interface NavigationItem {
 export const navigation: NavigationItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Customers", href: "/dashboard/customers", icon: Users },
-  { name: "Menu", href: "/dashboard/menu", icon: Coffee },
+  { name: "Menu", href: "/dashboard/menu", icon: Package },
   { name: "Menu Generator", href: "/dashboard/menu-generator", icon: WandSparkles },
   { name: "QR Codes", href: "/dashboard/qr-codes", icon: QrCode, hasDot: true },
   { name: "Staff Scanner", href: "/dashboard/scanner", icon: ScanLine },
@@ -118,13 +119,12 @@ export function Sidebar() {
   return (
     <aside className="desktop-sidebar hidden border-r border-line bg-surface-soft px-5 py-6 lg:flex lg:flex-col lg:overflow-hidden">
       <div className="flex items-center gap-3 px-2">
-        <div className="relative grid h-10 w-10 place-items-center rounded-[14px] border border-purple-dark bg-purple text-white shadow-sm">
-          <span className="absolute inset-[5px] rounded-[5px] border border-white/25" />
-          <Coffee aria-hidden="true" className="relative h-5 w-5 text-white" strokeWidth={1.8} />
+        <div className="grid h-14 w-14 place-items-center">
+          <Logo />
         </div>
         <div>
-          <p className="text-[17px] font-bold leading-none tracking-[-.04em] text-ink">Perkly</p>
-          <p className="mt-1 text-[10px] font-semibold uppercase tracking-[.16em] text-muted">Loyalty studio</p>
+          <p className="text-[17px] font-bold leading-none tracking-[-.04em] text-ink">Scaniha</p>
+          <p className="mt-1 text-[10px] font-semibold uppercase tracking-[.16em] text-muted">Digital experiences</p>
         </div>
       </div>
 
@@ -135,7 +135,7 @@ export function Sidebar() {
         aria-label="Switch business"
       >
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gold-soft text-accent-foreground">
-          <Coffee aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
+          <Package aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate text-xs font-semibold text-ink">{business.name}</span>
@@ -159,7 +159,7 @@ export function Sidebar() {
             </span>
             <p className="text-[11px] font-bold text-ink">Need a hand?</p>
           </div>
-          <p className="mt-2 text-[11px] leading-relaxed text-muted">Your loyalty guide is one click away.</p>
+          <p className="mt-2 text-[11px] leading-relaxed text-muted">Your digital experience guide is one click away.</p>
           <Button variant="link" className="mt-2 h-auto p-0 text-[11px] font-bold text-purple-dark">
             Open help center <span aria-hidden="true">→</span>
           </Button>

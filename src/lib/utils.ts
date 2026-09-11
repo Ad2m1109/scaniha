@@ -18,3 +18,10 @@ export function customerTier(points: number): Customer["tier"] {
   if (points >= 500) return "Silver";
   return "Bronze";
 }
+
+export function driveImage(url: string | undefined | null): string {
+  if (!url) return "";
+  if (url.startsWith("data:") || url.startsWith("/")) return url;
+  if (!url.startsWith("http://") && !url.startsWith("https://")) return "";
+  return `/api/image?url=${encodeURIComponent(url)}`;
+}

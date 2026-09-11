@@ -84,8 +84,8 @@ export async function uploadImage(
     });
   }
 
-  // Return a direct link that works for <img src="">
-  return `https://drive.google.com/uc?export=view&id=${fileId}`;
+  // Return a direct link that works reliably for <img src=""> and background-image
+  return `https://lh3.googleusercontent.com/d/${fileId}`;
 }
 
 /**
@@ -312,6 +312,9 @@ export async function initializeDrive(
  */
 export function extractFileId(url: string): string | null {
   if (!url) return null;
+  // Format: https://lh3.googleusercontent.com/d/FILE_ID
+  const lhMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (lhMatch) return lhMatch[1];
   // Format: https://drive.google.com/uc?export=view&id=FILE_ID
   const ucMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
   if (ucMatch) return ucMatch[1];

@@ -15,17 +15,17 @@ interface ImageUploadProps {
 
 export function ImageUpload({ value, onChange, folder, className, label }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
-  const [preview, setPreview] = useState(value);
+  const [blobUrl, setBlobUrl] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const preview = blobUrl ?? value;
 
   const handleUpload = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
 
-      // Show local preview immediately
       const localPreview = URL.createObjectURL(file);
-      setPreview(localPreview);
+      setBlobUrl(localPreview);
       setUploading(true);
 
       try {
@@ -41,22 +41,22 @@ export function ImageUpload({ value, onChange, folder, className, label }: Image
         if (!res.ok) throw new Error("Upload failed");
 
         const { url } = await res.json();
+        setBlobUrl(null);
         onChange(url);
-        setPreview(url);
       } catch (err) {
         console.error("Image upload failed:", err);
-        setPreview(value);
+        setBlobUrl(null);
       } finally {
         setUploading(false);
         if (inputRef.current) inputRef.current.value = "";
       }
     },
-    [folder, onChange, value]
+    [folder, onChange]
   );
 
   const handleRemove = useCallback(() => {
+    setBlobUrl(null);
     onChange("");
-    setPreview("");
   }, [onChange]);
 
   return (

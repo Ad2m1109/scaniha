@@ -70,7 +70,7 @@ export default function DashboardPage() {
       <section className="reveal reveal-delay-4"><TopRewards /></section>
 
       <footer className="flex flex-col gap-2 border-t border-line pt-4 text-[11px] font-semibold text-faint sm:flex-row sm:items-center sm:justify-between">
-        <span>Perkly for {business.name}</span>
+        <span>Scaniha for {business.name}</span>
         <span className="flex items-center gap-1.5">
           <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
           Last synced 2 min ago

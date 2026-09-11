@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTheme } from "next-themes";
 
 import { Header } from "@/components/dashboard/Header";
 import { MobileNavigation, Sidebar } from "@/components/dashboard/Sidebar";
@@ -14,9 +15,11 @@ export function DashboardShell({
   children: React.ReactNode;
   ready?: boolean;
 }>) {
-  const [isDark, setIsDark] = useState(false);
+  const { theme, setTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
+
+  const isDark = theme === "dark";
 
   if (!ready) {
     return <DashboardSkeleton />;
@@ -25,7 +28,7 @@ export function DashboardShell({
   return (
     <div
       className={cn("dashboard-app", isDark && "dark")}
-      data-theme={isDark ? "dark" : "light"}
+      data-theme={theme}
       data-mobile-open={mobileOpen}
     >
       <div className="mx-auto grid h-screen max-w-[1540px] lg:grid-cols-[246px_minmax(0,1fr)]">
@@ -37,7 +40,7 @@ export function DashboardShell({
             hasUnread={hasUnread}
             onMobileToggle={() => setMobileOpen((open) => !open)}
             onNotificationClick={() => setHasUnread(false)}
-            onThemeToggle={() => setIsDark((dark) => !dark)}
+            onThemeToggle={() => setTheme(isDark ? "light" : "dark")}
           />
           <div id="mobile-navigation">
             <MobileNavigation onNavigate={() => setMobileOpen(false)} />

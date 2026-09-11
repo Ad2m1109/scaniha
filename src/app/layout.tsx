@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Perkly — Loyalty Studio",
-  description: "A premium loyalty card system for growing businesses.",
+  title: "Scaniha — Digital experiences for any business",
+  description: "Turn your business into a digital experience. QR-powered access, mobile-first, free to start.",
 };
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <body>
         <Providers>{children}</Providers>
       </body>

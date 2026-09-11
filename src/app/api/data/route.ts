@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const parsed = dataPostSchema.safeParse(body);
   if (!parsed.success) {
+    console.error("[/api/data] Validation error:", JSON.stringify(parsed.error.flatten(), null, 2));
     return NextResponse.json(
       { error: "Invalid data", details: parsed.error.flatten().fieldErrors },
       { status: 400 }

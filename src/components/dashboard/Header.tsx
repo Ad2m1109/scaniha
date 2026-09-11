@@ -1,8 +1,9 @@
 "use client";
 
-import { Bell, Menu, Palette, Sun } from "lucide-react";
+import { Bell, Menu, Moon, Sun } from "lucide-react";
+import { useSession } from "next-auth/react";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAppData } from "@/context/AppDataContext";
@@ -25,6 +26,8 @@ export function Header({
   onThemeToggle,
 }: HeaderProps) {
   const { business } = useAppData();
+  const { data: session } = useSession();
+  const userImage = session?.user?.image;
   const today = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "Africa/Algiers" }).format(new Date());
   return (
     <header className="relative flex items-center justify-between gap-4 border-b border-line py-4 lg:py-6">
@@ -78,18 +81,21 @@ export function Header({
           variant="outline"
           size="icon"
           type="button"
-          className="icon-button hidden h-10 w-10 rounded-xl bg-surface-soft sm:inline-flex"
+          className="icon-button h-10 w-10 rounded-xl bg-surface-soft"
           onClick={onThemeToggle}
-          aria-label={isDark ? "Switch to default theme" : "Switch to soft theme"}
-          title={isDark ? "Switch to default theme" : "Switch to soft theme"}
+          aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          title={isDark ? "Switch to light mode" : "Switch to dark mode"}
         >
           {isDark ? (
             <Sun aria-hidden="true" className="h-[17px] w-[17px] text-gold" strokeWidth={1.8} />
           ) : (
-            <Palette aria-hidden="true" className="h-[17px] w-[17px] text-purple" strokeWidth={1.8} />
+            <Moon aria-hidden="true" className="h-[17px] w-[17px] text-muted" strokeWidth={1.8} />
           )}
         </Button>
         <Avatar size="default" className="h-10 w-10 bg-purple-soft text-purple-dark shadow-sm">
+          {userImage ? (
+            <AvatarImage src={userImage} alt={business.ownerName} />
+          ) : null}
           <AvatarFallback className="bg-transparent text-[11px] font-bold text-purple-dark">{business.ownerName.split(" ").map((part) => part[0]).join("")}</AvatarFallback>
         </Avatar>
       </div>

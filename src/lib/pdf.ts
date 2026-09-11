@@ -153,7 +153,7 @@ export function generateMenuPdf(
     doc.setFontSize(8);
     doc.setTextColor(colors.muted.r, colors.muted.g, colors.muted.b);
     doc.text(
-      `Powered by Perkly`,
+      `Powered by Scaniha`,
       pageWidth / 2,
       doc.internal.pageSize.getHeight() - 10,
       { align: "center" }

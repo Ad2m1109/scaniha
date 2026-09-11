@@ -91,7 +91,7 @@ const BUSINESS_HEADERS = [
   "menuCustomization",
 ];
 
-const CATEGORY_HEADERS = ["id", "name", "description", "sortOrder"];
+const CATEGORY_HEADERS = ["id", "name", "description", "image", "sortOrder"];
 
 const PRODUCT_HEADERS = [
   "id", "name", "description", "price", "image",
@@ -140,7 +140,7 @@ function businessToRow(b: BusinessProfile, s: MenuSettings): string[] {
 }
 
 function categoryToRow(c: Category): string[] {
-  return [c.id, c.name, c.description ?? "", String(c.sortOrder)];
+  return [c.id, c.name, c.description ?? "", c.image ?? "", String(c.sortOrder)];
 }
 
 function productToRow(p: Product): string[] {
@@ -213,11 +213,22 @@ function rowToSettings(row: string[]): Partial<MenuSettings> {
 }
 
 function rowToCategory(row: string[]): Category {
+  // Handle both old (4-col: id, name, description, sortOrder) and new (5-col: id, name, description, image, sortOrder)
+  if (row.length <= 4) {
+    return {
+      id:          row[0],
+      name:        row[1],
+      description: row[2],
+      image:       "",
+      sortOrder:   parseInt(row[3] || "0", 10),
+    };
+  }
   return {
     id:          row[0],
     name:        row[1],
     description: row[2],
-    sortOrder:   parseInt(row[3] || "0", 10),
+    image:       row[3] || "",
+    sortOrder:   parseInt(row[4] || "0", 10),
   };
 }
 

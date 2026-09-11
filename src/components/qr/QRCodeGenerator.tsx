@@ -5,7 +5,7 @@ import { Download, Printer } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 
-export function QRCodeGenerator({ value, filename = "perkly-qr", size = 176 }: { value: string; filename?: string; size?: number }) {
+export function QRCodeGenerator({ value, filename = "scaniha-qr", size = 176 }: { value: string; filename?: string; size?: number }) {
   const ref = useRef<SVGSVGElement>(null);
   function download() {
     const svg = ref.current;

@@ -4,6 +4,7 @@ export const categorySchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1).max(100),
   description: z.string().max(500).default(""),
+  image: z.string().default(""),
   sortOrder: z.number().int().min(0),
 });
 
@@ -24,9 +25,12 @@ export const customerSchema = z.object({
   email: z.string().email().or(z.literal("")).default(""),
   phone: z.string().max(20).default(""),
   image: z.string().default(""),
-  points: z.number().int().min(0).default(0),
-  visits: z.number().int().min(0).default(0),
-  tier: z.enum(["Gold", "Silver", "Bronze"]).default("Bronze"),
+  points: z.preprocess((v) => (v == null ? 0 : v), z.number().int().min(0).default(0)),
+  visits: z.preprocess((v) => (v == null ? 0 : v), z.number().int().min(0).default(0)),
+  tier: z.preprocess(
+    (v) => (["Gold", "Silver", "Bronze"].includes(v as string) ? v : "Bronze"),
+    z.enum(["Gold", "Silver", "Bronze"]).default("Bronze")
+  ),
   lastVisit: z.string().default("Never"),
   joinedAt: z.string().default(""),
   qrCode: z.string().default(""),
@@ -95,8 +99,8 @@ export const menuSettingsSchema = z.object({
 });
 
 export const businessProfileSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1).max(200),
+  id: z.string().default(""),
+  name: z.string().max(200).default(""),
   tagline: z.string().max(200).default(""),
   location: z.string().max(200).default(""),
   ownerName: z.string().max(100).default(""),
@@ -104,12 +108,12 @@ export const businessProfileSchema = z.object({
   activeMembers: z.number().int().min(0).default(0),
   memberGoal: z.number().int().min(0).default(100),
   createdAt: z.string().default(""),
-  phone: z.string().max(20).default(""),
+  phone: z.string().default(""),
   address: z.string().max(300).default(""),
   description: z.string().max(1000).default(""),
   logo: z.string().default(""),
-  facebook: z.string().url().or(z.literal("")).default(""),
-  instagram: z.string().url().or(z.literal("")).default(""),
+  facebook: z.string().default(""),
+  instagram: z.string().default(""),
   whatsapp: z.string().max(20).default(""),
   menuPdfUrl: z.string().default(""),
 });
