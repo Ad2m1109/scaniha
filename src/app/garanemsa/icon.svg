@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Garanemsa">
+  <rect width="64" height="64" rx="14" fill="#0C2B26"/>
+  <rect x="5.5" y="5.5" width="53" height="53" rx="10.5" fill="none" stroke="#D8B25C" stroke-opacity=".42"/>
+  <text x="32" y="45" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="36" font-weight="600" fill="#D8B25C">G</text>
+</svg>
