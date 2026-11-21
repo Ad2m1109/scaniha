@@ -21,7 +21,11 @@ export default function CustomersPage() {
   }, [customers, search, tier]);
 
   return (
+<<<<<<< HEAD
     <div className="mx-auto max-w-[1280px] space-y-4">
+=======
+    <div className="mx-auto max-w-[1280px] space-y-6">
+>>>>>>> origin/main
       <PageIntro
         eyebrow="Member directory"
         title="Know your regulars."
@@ -30,7 +34,11 @@ export default function CustomersPage() {
       />
 
       <Card className="glass-card border-0 ring-0">
+<<<<<<< HEAD
         <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+=======
+        <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+>>>>>>> origin/main
           <div className="relative min-w-0 flex-1 sm:max-w-md">
             <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-faint" strokeWidth={1.8} />
             <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search by name, email, or phone" aria-label="Search customers" className="h-10 rounded-xl border-line bg-surface-soft pl-9" />

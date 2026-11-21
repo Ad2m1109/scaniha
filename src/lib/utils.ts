@@ -1,10 +1,14 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+<<<<<<< HEAD
 import type { Customer } from "@/types"
+=======
+>>>>>>> origin/main
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+<<<<<<< HEAD
 
 export function generateId(prefix: string) {
   const suffix = typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -25,3 +29,5 @@ export function driveImage(url: string | undefined | null): string {
   if (!url.startsWith("http://") && !url.startsWith("https://")) return "";
   return `/api/image?url=${encodeURIComponent(url)}`;
 }
+=======
+>>>>>>> origin/main

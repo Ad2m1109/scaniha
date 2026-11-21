@@ -5,8 +5,15 @@ import { usePathname } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import {
   BarChart3,
+<<<<<<< HEAD
   Gift,
   LayoutDashboard,
+=======
+  Coffee,
+  Gift,
+  LayoutDashboard,
+  MoreHorizontal,
+>>>>>>> origin/main
   QrCode,
   Settings2,
   Users,
@@ -15,6 +22,7 @@ import {
   HeartHandshake,
   ScanLine,
   WandSparkles,
+<<<<<<< HEAD
   Package,
 } from "lucide-react";
 
@@ -23,6 +31,14 @@ import { Button } from "@/components/ui/button";
 import { useAppData } from "@/context/AppDataContext";
 import { SidebarAccount } from "@/components/dashboard/SidebarAccount";
 import { Logo } from "@/components/Logo";
+=======
+} from "lucide-react";
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useAppData } from "@/context/AppDataContext";
+>>>>>>> origin/main
 import { cn } from "@/lib/utils";
 
 export interface NavigationItem {
@@ -35,8 +51,13 @@ export interface NavigationItem {
 
 export const navigation: NavigationItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+<<<<<<< HEAD
   { name: "Customers", href: "/dashboard/customers", icon: Users },
   { name: "Menu", href: "/dashboard/menu", icon: Package },
+=======
+  { name: "Customers", href: "/dashboard/customers", icon: Users, badge: "1.2k" },
+  { name: "Menu", href: "/dashboard/menu", icon: Coffee },
+>>>>>>> origin/main
   { name: "Menu Generator", href: "/dashboard/menu-generator", icon: WandSparkles },
   { name: "QR Codes", href: "/dashboard/qr-codes", icon: QrCode, hasDot: true },
   { name: "Staff Scanner", href: "/dashboard/scanner", icon: ScanLine },
@@ -56,19 +77,28 @@ function NavigationLinks({
   pathname,
   onNavigate,
   mobile = false,
+<<<<<<< HEAD
   customerBadge,
+=======
+>>>>>>> origin/main
 }: {
   pathname: string;
   onNavigate?: () => void;
   mobile?: boolean;
+<<<<<<< HEAD
   customerBadge?: string;
+=======
+>>>>>>> origin/main
 }) {
   return (
     <nav aria-label="Primary navigation" className={cn(mobile ? "grid grid-cols-2 gap-1" : "space-y-1")}>
       {navigation.map((item) => {
         const Icon = item.icon;
         const active = isNavigationActive(pathname, item.href);
+<<<<<<< HEAD
         const badge = item.name === "Customers" && customerBadge ? customerBadge : item.badge;
+=======
+>>>>>>> origin/main
 
         return (
           <Link
@@ -88,12 +118,20 @@ function NavigationLinks({
               strokeWidth={1.8}
             />
             <span className="truncate">{item.name}</span>
+<<<<<<< HEAD
             {!mobile && badge ? (
+=======
+            {!mobile && item.badge ? (
+>>>>>>> origin/main
               <Badge
                 variant="secondary"
                 className="ml-auto h-5 rounded-full bg-purple-soft px-2 py-0 text-[10px] font-bold text-purple-dark"
               >
+<<<<<<< HEAD
                 {badge}
+=======
+                {item.badge}
+>>>>>>> origin/main
               </Badge>
             ) : null}
             {!mobile && item.hasDot ? (
@@ -111,6 +149,7 @@ function NavigationLinks({
 
 export function Sidebar() {
   const pathname = usePathname();
+<<<<<<< HEAD
   const { business, customers } = useAppData();
   const customerBadge = customers.length >= 1000
     ? `${(customers.length / 1000).toFixed(1)}k`
@@ -125,6 +164,20 @@ export function Sidebar() {
         <div>
           <p className="text-[17px] font-bold leading-none tracking-[-.04em] text-ink">Scaniha</p>
           <p className="mt-1 text-[10px] font-semibold uppercase tracking-[.16em] text-muted">Digital experiences</p>
+=======
+  const { business } = useAppData();
+
+  return (
+    <aside className="desktop-sidebar hidden overflow-y-auto border-r border-line bg-surface-soft px-5 py-6 lg:flex lg:flex-col">
+      <div className="flex items-center gap-3 px-2">
+        <div className="relative grid h-10 w-10 place-items-center rounded-[14px] border border-purple-dark bg-purple text-white shadow-sm">
+          <span className="absolute inset-[5px] rounded-[5px] border border-white/25" />
+          <Coffee aria-hidden="true" className="relative h-5 w-5 text-white" strokeWidth={1.8} />
+        </div>
+        <div>
+          <p className="text-[17px] font-bold leading-none tracking-[-.04em] text-ink">Perkly</p>
+          <p className="mt-1 text-[10px] font-semibold uppercase tracking-[.16em] text-muted">Loyalty studio</p>
+>>>>>>> origin/main
         </div>
       </div>
 
@@ -135,7 +188,11 @@ export function Sidebar() {
         aria-label="Switch business"
       >
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gold-soft text-accent-foreground">
+<<<<<<< HEAD
           <Package aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
+=======
+          <Coffee aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
+>>>>>>> origin/main
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate text-xs font-semibold text-ink">{business.name}</span>
@@ -144,6 +201,7 @@ export function Sidebar() {
         <ChevronsUpDown aria-hidden="true" className="h-4 w-4 shrink-0 text-muted" strokeWidth={1.8} />
       </Button>
 
+<<<<<<< HEAD
       <div className="mt-8 flex-1 overflow-y-auto overscroll-contain">
         <div className="px-3 text-[10px] font-bold uppercase tracking-[.18em] text-muted">Workspace</div>
         <div className="mt-3">
@@ -152,6 +210,14 @@ export function Sidebar() {
       </div>
 
       <div className="mt-4 space-y-3">
+=======
+       <div className="mt-8 px-3 text-[10px] font-bold uppercase tracking-[.18em] text-muted">Workspace</div>
+      <div className="mt-3">
+        <NavigationLinks pathname={pathname} />
+      </div>
+
+      <div className="mt-auto space-y-3">
+>>>>>>> origin/main
         <div className="rounded-2xl border border-line bg-surface-solid p-3">
           <div className="flex items-center gap-2">
             <span className="grid h-7 w-7 place-items-center rounded-lg bg-gold-soft text-accent-foreground">
@@ -159,13 +225,35 @@ export function Sidebar() {
             </span>
             <p className="text-[11px] font-bold text-ink">Need a hand?</p>
           </div>
+<<<<<<< HEAD
           <p className="mt-2 text-[11px] leading-relaxed text-muted">Your digital experience guide is one click away.</p>
+=======
+          <p className="mt-2 text-[11px] leading-relaxed text-muted">Your loyalty guide is one click away.</p>
+>>>>>>> origin/main
           <Button variant="link" className="mt-2 h-auto p-0 text-[11px] font-bold text-purple-dark">
             Open help center <span aria-hidden="true">→</span>
           </Button>
         </div>
 
+<<<<<<< HEAD
         <SidebarAccount />
+=======
+        <Button
+          variant="ghost"
+          type="button"
+          className="flex h-auto w-full items-center justify-start gap-3 rounded-2xl border border-transparent px-2 py-2 text-left hover:border-line hover:bg-purple-wash"
+          aria-label="Open account menu"
+        >
+          <Avatar size="default" className="h-9 w-9 bg-purple-soft text-purple-dark">
+            <AvatarFallback className="bg-transparent text-xs font-bold text-purple-dark">{business.ownerName.split(" ").map((part) => part[0]).join("")}</AvatarFallback>
+          </Avatar>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-xs font-bold text-ink">{business.ownerName}</span>
+            <span className="block truncate text-[11px] text-muted">Owner account</span>
+          </span>
+          <MoreHorizontal aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.8} />
+        </Button>
+>>>>>>> origin/main
       </div>
     </aside>
   );

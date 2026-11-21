@@ -1,12 +1,17 @@
+<<<<<<< HEAD
 "use client";
 
 import { useMemo, useState } from "react";
+=======
+import type { LucideIcon } from "lucide-react";
+>>>>>>> origin/main
 import { ArrowUpRight, Repeat2, TicketCheck, UserPlus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+<<<<<<< HEAD
 import { useAppData } from "@/context/AppDataContext";
 import { formatNumber } from "@/lib/formatters";
 
@@ -52,6 +57,42 @@ export function TodaySnapshot() {
     ];
   }, [now, customers, redemptions, visits]);
 
+=======
+
+interface SnapshotItem {
+  label: string;
+  description: string;
+  value: string;
+  icon: LucideIcon;
+  iconClassName: string;
+}
+
+const snapshotItems: SnapshotItem[] = [
+  {
+    label: "New members",
+    description: "Joined the program today",
+    value: "24",
+    icon: UserPlus,
+    iconClassName: "bg-purple-soft text-purple",
+  },
+  {
+    label: "Rewards claimed",
+    description: "Mostly free latte redemptions",
+    value: "38",
+    icon: TicketCheck,
+    iconClassName: "bg-gold-soft text-accent-foreground",
+  },
+  {
+    label: "Returning guests",
+    description: "Came back within 7 days",
+    value: "71%",
+    icon: Repeat2,
+    iconClassName: "bg-success-soft text-success",
+  },
+];
+
+export function TodaySnapshot() {
+>>>>>>> origin/main
   return (
     <Card className="glass-card min-w-0 border-0 p-0 ring-0">
       <CardHeader className="flex flex-row items-start justify-between gap-3 p-5 pb-0 sm:p-6 sm:pb-0">

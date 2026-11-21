@@ -27,7 +27,10 @@ export interface Category {
   id: string;
   name: string;
   description: string;
+<<<<<<< HEAD
   image: string;
+=======
+>>>>>>> origin/main
   sortOrder: number;
 }
 
@@ -47,7 +50,10 @@ export interface Customer {
   name: string;
   email: string;
   phone: string;
+<<<<<<< HEAD
   image: string;
+=======
+>>>>>>> origin/main
   points: number;
   visits: number;
   tier: CustomerTier;
@@ -94,6 +100,7 @@ export interface MenuViewRecord {
 }
 
 export type MenuTemplateId = "noir" | "lavender" | "sunset" | "botanical" | "mono";
+<<<<<<< HEAD
 export type MenuLayout = "grid" | "list" | "compact";
 export type MenuHeaderStyle = "centered" | "split" | "cover";
 export type MenuCardStyle = "elevated" | "outline" | "minimal";
@@ -108,12 +115,15 @@ export interface MenuColors {
   muted: string;
   accent: string;
 }
+=======
+>>>>>>> origin/main
 
 export interface MenuSettings {
   template: MenuTemplateId;
   currency: string;
   heroImage: string;
   tagline: string;
+<<<<<<< HEAD
   layout: MenuLayout;
   headerStyle: MenuHeaderStyle;
   cardStyle: MenuCardStyle;
@@ -124,6 +134,8 @@ export interface MenuSettings {
   showImages: boolean;
   showDescriptions: boolean;
   showContactInfo: boolean;
+=======
+>>>>>>> origin/main
 }
 
 export interface MetricPoint extends ActivityPoint {
@@ -139,7 +151,10 @@ export interface BusinessProfile extends Business {
   facebook: string;
   instagram: string;
   whatsapp: string;
+<<<<<<< HEAD
   menuPdfUrl: string;
+=======
+>>>>>>> origin/main
 }
 
 export interface AppState {
