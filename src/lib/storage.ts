@@ -1,6 +1,5 @@
 import { seedState } from "@/lib/data/seed";
 import type { AppState } from "@/types";
-<<<<<<< HEAD
 import { normalizeMenuSettings } from "@/lib/menu-settings";
 
 const LEGACY_KEY = "perkly.mvp.v1";
@@ -22,30 +21,14 @@ export function loadAppState(businessId?: string): AppState {
     const namespacedKey = businessId ? storageKey(businessId) : null;
     const stored = (namespacedKey && window.localStorage.getItem(namespacedKey))
       ?? window.localStorage.getItem(LEGACY_KEY);
-=======
-
-const STORAGE_KEY = "perkly.mvp.v1";
-
-export function loadAppState(): AppState {
-  if (typeof window === "undefined") return seedState;
-
-  try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
->>>>>>> origin/main
     if (!stored) return seedState;
     const parsed = JSON.parse(stored) as Partial<AppState>;
     return {
       ...seedState,
       ...parsed,
-<<<<<<< HEAD
       business: { ...seedState.business, ...parsed.business, menuPdfUrl: parsed.business?.menuPdfUrl ?? seedState.business.menuPdfUrl },
       loyalty: { ...seedState.loyalty, ...parsed.loyalty },
       menuSettings: normalizeMenuSettings(parsed.menuSettings),
-=======
-      business: { ...seedState.business, ...parsed.business },
-      loyalty: { ...seedState.loyalty, ...parsed.loyalty },
-      menuSettings: { ...seedState.menuSettings, ...parsed.menuSettings },
->>>>>>> origin/main
       categories: parsed.categories ?? seedState.categories,
       products: parsed.products ?? seedState.products,
       customers: parsed.customers ?? seedState.customers,
@@ -59,7 +42,6 @@ export function loadAppState(): AppState {
   }
 }
 
-<<<<<<< HEAD
 /**
  * Save app state to localStorage under the businessId-namespaced key.
  * Also clears any stale data from the legacy key or a different businessId.
@@ -85,8 +67,4 @@ export function clearAppState(businessId?: string) {
     window.localStorage.removeItem(storageKey(businessId));
   }
   window.localStorage.removeItem(LEGACY_KEY);
-=======
-export function saveAppState(state: AppState) {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
->>>>>>> origin/main
 }

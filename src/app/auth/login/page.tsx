@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 "use client";
 
 import Link from "next/link";
@@ -138,8 +137,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-=======
-export default function LoginPage() {
-  return null;
->>>>>>> origin/main
 }

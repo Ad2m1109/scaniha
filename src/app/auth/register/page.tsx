@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 "use client";
 
 import Link from "next/link";
@@ -137,8 +136,4 @@ export default function RegisterPage() {
       </div>
     </div>
   );
-=======
-export default function RegisterPage() {
-  return null;
->>>>>>> origin/main
 }

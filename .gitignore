@@ -36,12 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
-<<<<<<< HEAD
 # local data (mappings, snapshots)
 .data/
 
-=======
->>>>>>> origin/main
 # typescript
 *.tsbuildinfo
 next-env.d.ts
